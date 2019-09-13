@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
@@ -19,12 +20,22 @@ public class Driver {
 	 * inverted index.
 	 *
 	 * @param args flag/value pairs used to start this program
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		InvertedIndex index = new InvertedIndex();
 		// store initial start time
 		Instant start = Instant.now();
 
-		// TODO Fill in and modify this method as necessary.
+		ArgumentParser parse = new ArgumentParser(args);
+		if(parse.hasFlag("-path")) {
+			index.addPath(parse.getPath("-path"));
+			
+		}
+		if(parse.hasFlag("-index")) {
+			index.printIndex(parse.getString("-index"));
+		}
+		
 		System.out.println(Arrays.toString(args));
 
 		// calculate time elapsed and output
@@ -33,13 +44,4 @@ public class Driver {
 		System.out.printf("Elapsed: %f seconds%n", seconds);
 	}
 
-	/*
-	 * TODO: Delete this after reading...
-	 *
-	 * Generally, "driver" classes are responsible for setting up and calling other
-	 * classes, usually from a main() method that parses command-line parameters. If
-	 * the driver were only responsible for a single class, we use that class name.
-	 * For example, "PizzaDriver" is what we would name a driver class that just
-	 * sets up and calls the "Pizza" class.
-	 */
 }
