@@ -172,7 +172,7 @@ public class SimpleJsonWriter {
 	 * @param level    the initial indent level
 	 * @throws IOException
 	 */
-	public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Writer writer, int level) throws IOException {
+	public static void asNestedObject(TreeMap<String, ArrayList<Integer>> elements, Writer writer, int level) throws IOException {
 		// TODO MODIFY AND FILL IN AS NECESSARY TO PASS TESTS
 		// TODO USE ITERATION NOT STRING REPLACEMENT
 		Iterator<String> eterator=elements.keySet().iterator();
@@ -192,19 +192,20 @@ public class SimpleJsonWriter {
 			if(Niterator.hasNext()) {
 				Integer num = Niterator.next();
 				indent(num.toString(), writer, level+2);
-				writer.write("\n\t]");
 				
 			}
 			
 			
 			while(Niterator.hasNext()) {
 				Integer num = Niterator.next();
+				writer.write(",\n");
 				indent(num.toString(), writer, level+2);
 				
-				writer.write("\t]");
+				
 				
 				
 			}
+			writer.write("\n\t]");
 			
 			//writer.write(" " + elements.get(line));//list iterator 
 			
@@ -259,7 +260,8 @@ public class SimpleJsonWriter {
 	 * Writes the elements as a nested pretty JSON object to file.
 	 *
 	 * @param elements the elements to write
-	 * @param path     the file path to use
+	 * @param writer 
+	 * @param level 
 	 * @throws IOException
 	 *
 	 * @see #asNestedObject(Map, Writer, int)
@@ -270,16 +272,18 @@ public class SimpleJsonWriter {
 		writer.write("{");
 		if(iterator.hasNext()) {
 			String key = iterator.next();
-			writer.write("\n");
-			writer.write(key +":");
-			asNestedObject(elements.get(key), writer, level);
+			writer.write("\n\t");
+			writer.write('"' + key+ '"' +": ");
+			asNestedObject(elements.get(key), writer, level+1);
 		}
 		while(iterator.hasNext()) {
 			String key = iterator.next();
-			writer.write(",\n");
-			writer.write(key +":");
-			asNestedObject(elements.get(key), writer, level);
+			writer.write(",\n\t");
+			writer.write('"' + key+ '"' +": ");
+			asNestedObject(elements.get(key), writer, level+1);
 		}
+		writer.write("\n");
+		indent("}", writer, level-1);
 	}
 	/**
 	 * @param elements
@@ -291,7 +295,12 @@ public class SimpleJsonWriter {
 			asDoubleNested(elements, writer, 0);
 		}
 	}
-	public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Path path) throws IOException {
+	/**
+	 * @param elements
+	 * @param path
+	 * @throws IOException
+	 */
+	public static void asNestedObject(TreeMap<String, ArrayList<Integer>> elements, Path path) throws IOException {
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asNestedObject(elements, writer, 0);
@@ -306,7 +315,7 @@ public class SimpleJsonWriter {
 	 *
 	 * @see #asNestedObject(Map, Writer, int)
 	 */
-	public static String asNestedObject(Map<String, ? extends Collection<Integer>> elements) {
+	public static String asNestedObject( TreeMap<String, ArrayList<Integer>> elements) {
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try {
 			StringWriter writer = new StringWriter();
@@ -406,7 +415,7 @@ public class SimpleJsonWriter {
 
 		//TreeSet<Integer> elements = new TreeSet<>();
 		Map<String, Integer> test = new HashMap<>();
-		Map<String, HashSet<Integer>> nestedTest = new HashMap<>();
+//		Map<String, HashSet<Integer>> nestedTest = new HashMap<>();
 		HashSet<Integer> one = new HashSet<>();
 		HashSet<Integer> two= new HashSet<>();
 		HashSet<Integer> three= new HashSet<>();
@@ -429,22 +438,22 @@ public class SimpleJsonWriter {
 		three.add(3);
 		
 		
-		test.put("one", 1);
-		test.put("two", 2);
-		test.put("three",3);
-		nestedTest.put("one", one);
-		nestedTest.put("two", two);
-		nestedTest.put("three", three);
-		
-		System.out.println(asNestedObject(elements));
-		
-		System.out.println(nestedTest);
-		
-		System.out.println(asNestedObject(nestedTest));
-		
-		
-		System.out.println(test.toString());
-		
+//		test.put("one", 1);
+//		test.put("two", 2);
+//		test.put("three",3);
+//		nestedTest.put("one", one);
+//		nestedTest.put("two", two);
+//		nestedTest.put("three", three);
+//		
+//		System.out.println(asNestedObject(elements));
+//		
+//		System.out.println(nestedTest);
+//		
+//		System.out.println(asNestedObject(nestedTest));
+//		
+//		
+//		System.out.println(test.toString());
+//		
 //		System.out.println(asObject(test));
 //		System.out.println("Empty:");
 //		System.out.println(asArray(elements));

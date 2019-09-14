@@ -92,7 +92,7 @@ public class InvertedIndex {
 				for(String words: PLine) {
 					
 					String data = (String) stemmer.stem(words.toString());
-					addElement(data,file.toString(),i++);
+					addElement(data,file.toString(),++i);
 				}
 				line  = reader.readLine();
 			}

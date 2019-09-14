@@ -34,6 +34,7 @@ public class Driver {
 		}
 		if(parse.hasFlag("-index")) {
 			index.printIndex(parse.getString("-index"));
+			
 		}
 		
 		System.out.println(Arrays.toString(args));
