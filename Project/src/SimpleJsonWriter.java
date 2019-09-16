@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -413,9 +412,7 @@ public class SimpleJsonWriter {
 	public static void main(String[] args) {
 		// MODIFY AS NECESSARY TO DEBUG YOUR CODE
 
-		//TreeSet<Integer> elements = new TreeSet<>();
-		Map<String, Integer> test = new HashMap<>();
-//		Map<String, HashSet<Integer>> nestedTest = new HashMap<>();
+		//		Map<String, HashSet<Integer>> nestedTest = new HashMap<>();
 		HashSet<Integer> one = new HashSet<>();
 		HashSet<Integer> two= new HashSet<>();
 		HashSet<Integer> three= new HashSet<>();

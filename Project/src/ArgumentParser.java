@@ -85,14 +85,21 @@ public class ArgumentParser {
 	 * @see String#length()
 	 */
 	public static boolean isFlag(String arg) {
-		
-		if(arg != null && arg.startsWith("-" )) {
-			if(arg.length()>1 ) {
-				return true;
+		try {
+			if(arg != null && arg.startsWith("-" )) {
+				if(arg.length()>1 ) {
+					return true;
+					}
 				}
-			}
-		return false;
+			return false;
+
+		}catch(Exception e) {
+			return false;
 		}
+			
+		}
+		
+		
 
 	/**
 	 * Determines whether the argument is a value. Values do not start with a dash
@@ -186,10 +193,11 @@ public class ArgumentParser {
 	public Path getPath(String flag) {
 		
 		String path = map.get(flag);
-		if(path == null) {
-			return null;
+		if(path != null) {
+			return Path.of(path);
 		}
-		return Path.of(path);
+		return null;
+		
 	}
 
 	/**

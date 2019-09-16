@@ -1,32 +1,37 @@
 import java.util.*;
-
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 /**
  * @author Jnhamid
  *
  */
 public class InvertedIndex {
+	
+	/**
+	 * 	Snowball Stemmer 
+	 */
+	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 	/**
 	 * Private Identifier for our Custom data structure
 	 */
-	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 	private TreeMap<String, TreeMap<String, ArrayList<Integer>>> index;
+	
+	/**
+	 * Map for count
+	 */
+	public TreeMap<String, Integer> count;
 	
 	/**
 	 * Initial map
 	 */
 	public InvertedIndex(){
 		index = new TreeMap<>();
+		count = new TreeMap<>();
 	}
 	
 	/**
@@ -41,12 +46,18 @@ public class InvertedIndex {
 			 if(index.get(word).containsKey(file)) {
 				 if(!index.get(word).get(file).contains(pos)) {
 					 index.get(word).get(file).add(pos);
+					 this.getCount().put(file, getCount().get(file) + 1);
 				 }
 			 }
 			 else{
 			 ArrayList<Integer> postions = new ArrayList<>();
 			 postions.add(pos);
 			 index.get(word).put(file, postions);
+			 if (getCount().get(file) == null) {
+					this.getCount().put(file, 1);
+				} else {
+					this.getCount().put(file, getCount().get(file) + 1);
+				}
 			 }
 			 
 		}
@@ -56,10 +67,16 @@ public class InvertedIndex {
 			postions.add(pos);
 			nestedIndex.put(file, postions);
 			index.put(word, nestedIndex);
+			if (getCount().get(file) == null) {
+				this.getCount().put(file, 1);
+			} else {
+				this.getCount().put(file, getCount().get(file) + 1);
+			}
 		}
 	}
 	
 	/**
+	 * will output to file, using a modified function from hw 
 	 * @param outFile
 	 * @throws IOException 
 	 */
@@ -99,6 +116,21 @@ public class InvertedIndex {
 			
 			
 		}
+		catch (Exception e) {
+			System.out.println("Couldn't Read File");
+		}
+	}
+	/**
+	 * @return index
+	 */
+	public TreeMap<String,TreeMap<String, ArrayList<Integer>>> getIndex(){
+		return index;
+	}
+	/**
+	 * @return count TreeMap
+	 */
+	public TreeMap<String, Integer> getCount(){
+		return count;
 	}
 	
 		
