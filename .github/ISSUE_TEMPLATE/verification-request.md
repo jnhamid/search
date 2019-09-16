@@ -9,12 +9,12 @@ assignees: oliviakumar
 
 Please verify my project functionality. The required information is below:
 
-  - **Name:** FULL_NAME
-  - **Last Release:** OLD_RELEASE
+  - **Name:** Jaden Hamid
+  - **Last Release:** LAST_RELEASE
   - **This Release:** NEW_RELEASE
 
 ```
-/home/public/cs212/project GITHUB_USER NEW_RELEASE
+/home/public/cs212/project jnhamid NEW_RELEASE
 ```
 
 #### Functionality Grade
