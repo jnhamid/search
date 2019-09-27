@@ -42,37 +42,12 @@ public class InvertedIndex {
 	 * 
 	 */
 	public void addElement(String word, String file, Integer pos) {
-		if(index.containsKey(word)) {
-			 if(index.get(word).containsKey(file)) {
-				 if(!index.get(word).get(file).contains(pos)) {
-					 index.get(word).get(file).add(pos);
-					 this.getCount().put(file, getCount().get(file) + 1);
-				 }
-			 }
-			 else{
-			 ArrayList<Integer> postions = new ArrayList<>();
-			 postions.add(pos);
-			 index.get(word).put(file, postions);
-			 if (getCount().get(file) == null) {
-					this.getCount().put(file, 1);
-				} else {
-					this.getCount().put(file, getCount().get(file) + 1);
-				}
-			 }
-			 
-		}
-		else {
-			TreeMap<String, ArrayList<Integer>> nestedIndex = new TreeMap<>();
-			ArrayList<Integer> postions = new ArrayList<>();
-			postions.add(pos);
-			nestedIndex.put(file, postions);
-			index.put(word, nestedIndex);
-			if (getCount().get(file) == null) {
-				this.getCount().put(file, 1);
-			} else {
-				this.getCount().put(file, getCount().get(file) + 1);
-			}
-		}
+		index.putIfAbsent(word, new TreeMap<String, ArrayList<Integer>>());
+		index.get(word).putIfAbsent(file, new ArrayList<Integer>());
+		index.get(word).get(file).add(pos);
+		count.putIfAbsent(file, 0);
+		count.put(file, count.get(file) +1);
+		
 	}
 	
 	/**
