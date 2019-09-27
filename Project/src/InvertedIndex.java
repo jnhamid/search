@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 /**
  * @author Jnhamid
- *
+ *push
  */
 public class InvertedIndex {
 	
