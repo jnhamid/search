@@ -3,10 +3,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Set;
 import java.util.TreeSet;
-
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
@@ -60,7 +57,6 @@ public class TextFileStemmer {
 			StemmedWords.add(data);
 		}
 		return StemmedWords;
-		//this is a test commit to github
 	}
 
 	/**
@@ -100,26 +96,5 @@ public class TextFileStemmer {
 			throw new IOException("Unable to Parse File. ");
 		}
 		return StemmedWords;
-	}
-	
-
-	/**
-	 * A simple main method that demonstrates this class.
-	 *
-	 * @param args unused
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws IOException {
-
-		String text = "practic practical practice practiced practicer practices "
-				+ "practicing practis practisants practise practised practiser "
-				+ "practisers practises practising practitioner practitioners";
-
-		System.out.println(uniqueStems(text));
-
-		// Path inputPath = Paths.get("test", "animals.text");
-		Path inputPath = Paths.get("test", "rfc475.txt");
-		Set<String> actual = TextFileStemmer.uniqueStems(inputPath);
-		System.out.println(actual);
 	}
 }

@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 /**
  * @author Jnhamid
- *push
+ *push1
  */
 public class InvertedIndex {
 	
@@ -49,7 +49,6 @@ public class InvertedIndex {
 		count.put(file, count.get(file) +1);
 		
 	}
-	
 	/**
 	 * will output to file, using a modified function from hw 
 	 * @param outFile
@@ -57,10 +56,6 @@ public class InvertedIndex {
 	 */
 	public void printIndex(String outFile) throws IOException {
 		SimpleJsonWriter.asDoubleNested(index, Path.of(outFile));
-
-	/**
-	 * @return
-	 */
 	}
 	/**
 	 * Adds Path 
@@ -74,25 +69,20 @@ public class InvertedIndex {
 				
 		) {
 			String line = reader.readLine();
-
 			// only 1 line needs to be "in memory" at a time
 			// (realistically, an entire buffer of text is in memory at a time)
 			int i =0;
 			while (line!= null) {
 				String[] PLine = TextParser.parse(line); 
-				
-				for(String words: PLine) {
-					
+				for(String words: PLine) {	
 					String data = (String) stemmer.stem(words.toString());
 					addElement(data,file.toString(),++i);
 				}
 				line  = reader.readLine();
 			}
-			
-			
 		}
 		catch (Exception e) {
-			System.out.println("Couldn't Read File");
+			System.out.println("Couldn't Read File: " + file);
 		}
 	}
 	/**
@@ -109,5 +99,5 @@ public class InvertedIndex {
 	}
 	
 		
-	}
+}
 

@@ -22,7 +22,6 @@ public class ArgumentParser {
 	 * Initializes this argument map.
 	 */
 	public ArgumentParser() {
-		// TODO Initialize map
 		this.map = new HashMap<>();
 	}
 
@@ -48,27 +47,18 @@ public class ArgumentParser {
 	public void parse(String[] args) {
 		for(int i =0; i< args.length; i++) {
 			String line = args[i];
-			System.out.println(line);
 			if(isFlag(line)) {
 				map.put(line, null);	
-				System.out.println(map);
 				if(i + 1 != args.length) {
 					String next = args[i + 1];
 					if(isValue(next)) {
 						map.put(line, next);	
-						
 					}
 					else {
 						map.put(line, null);
 					}
-				}
-				
-				
-				
-				
-			}
-				
-			
+				}						
+			}			
 		}
 	}
 				
@@ -93,11 +83,12 @@ public class ArgumentParser {
 				}
 			return false;
 
-		}catch(Exception e) {
+		}
+		catch(Exception e) {
 			return false;
 		}
 			
-		}
+}
 		
 		
 
@@ -220,17 +211,5 @@ public class ArgumentParser {
 	public String toString() {
 		// DO NOT MODIFY; THIS METHOD IS PROVIDED FOR YOU
 		return this.map.toString();
-	}
-
-	/**
-	 * A simple main method that parses the command-line arguments provided and
-	 * prints the result to the console.
-	 *
-	 * @param args the command-line arguments to parse
-	 */
-	public static void main(String[] args) {
-		// TODO Modify main(...) as needed to debug code
-		var map = new ArgumentParser(args);
-		System.out.println(map);
 	}
 }
