@@ -9,6 +9,17 @@ import java.util.stream.Stream;
  *
  */
 public class InvertedIndexBuilder {
+	
+	/* TODO
+	public static void build(InvertedIndex index, Path path) {
+		traverse the directory with Files.walk
+	}
+	
+	public static void addPath(InvertedIndex index, Path path) {
+		code from your addPath in your index now
+	}
+	*/
+	
 	/** 
 	 * Will build index by traversing files
 	 * @param index

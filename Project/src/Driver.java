@@ -12,6 +12,12 @@ import java.time.Instant;
  */
 public class Driver {
 
+	/*
+	 * TODO The way we are handling arguments is programmer-specific. So the specific 
+	 * key/values pairs should be in Driver. Those flag/value pairs should not really
+	 * appear in the other classes.
+	 */
+	
 	/**
 	 * Initializes the classes necessary based on the provided command-line
 	 * arguments. This includes (but is not limited to) how to build or search an

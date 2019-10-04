@@ -37,6 +37,8 @@ public class TextFileStemmer {
 		// THIS IS PROVIDED FOR YOU; NO NEED TO MODIFY
 		return uniqueStems(line, new SnowballStemmer(DEFAULT));
 	}
+	
+	// TODO Fix variable names... always starts with a lowercase letter
 
 	/**
 	 * Returns a set of unique (no duplicates) cleaned and stemmed words parsed
@@ -50,9 +52,10 @@ public class TextFileStemmer {
 	 * @see TextParser#parse(String)
 	 */
 	public static TreeSet<String> uniqueStems(String line, Stemmer stemmer) {
-		TreeSet<String> StemmedWords = new TreeSet<String>();
-		String[] PLine = TextParser.parse(line); 
+		TreeSet<String> StemmedWords = new TreeSet<String>(); // TODO stemmed
+		String[] PLine = TextParser.parse(line); // TODO words or tokens
 		for(String words: PLine) {
+			// TODO String data = stemmer.stem(words).toString();
 			String data = (String) stemmer.stem(words.toString());
 			StemmedWords.add(data);
 		}
@@ -92,7 +95,7 @@ public class TextFileStemmer {
 			
 			
 		}
-		catch (Exception e) {
+		catch (Exception e) { // TODO Remove catch block
 			throw new IOException("Unable to Parse File. ");
 		}
 		return StemmedWords;

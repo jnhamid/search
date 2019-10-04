@@ -15,16 +15,16 @@ public class InvertedIndex {
 	/**
 	 * 	Snowball Stemmer 
 	 */
-	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
+	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH; // TODO Move to the builder class
 	/**
 	 * Private Identifier for our Custom data structure
 	 */
-	private TreeMap<String, TreeMap<String, ArrayList<Integer>>> index;
+	private TreeMap<String, TreeMap<String, ArrayList<Integer>>> index; // TODO Switch ArrayList<Integer> to TreeSet<Integer>, make this final
 	
 	/**
 	 * Map for count
 	 */
-	public TreeMap<String, Integer> count;
+	public TreeMap<String, Integer> count; // TODO private final
 	
 	/**
 	 * Initial map
@@ -45,6 +45,13 @@ public class InvertedIndex {
 		index.putIfAbsent(word, new TreeMap<String, ArrayList<Integer>>());
 		index.get(word).putIfAbsent(file, new ArrayList<Integer>());
 		index.get(word).get(file).add(pos);
+		
+		/*
+		 * TODO This assumes there are no duplicate add calls
+		 * 
+		 * Use the position as a proxy for word count
+		 * Always use the max position of a location for its word count
+		 */
 		count.putIfAbsent(file, 0);
 		count.put(file, count.get(file) +1);
 		
@@ -62,7 +69,7 @@ public class InvertedIndex {
 	 * @param file
 	 * @throws IOException 
 	 */
-	public void addPath(Path file) throws IOException {
+	public void addPath(Path file) throws IOException { // TODO Move to the builder
 		Stemmer stemmer = new SnowballStemmer(DEFAULT);
 		try (
 				BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8);
@@ -81,23 +88,30 @@ public class InvertedIndex {
 				line  = reader.readLine();
 			}
 		}
-		catch (Exception e) {
+		catch (Exception e) { // TODO Remove the catch block
 			System.out.println("Couldn't Read File: " + file);
 		}
 	}
+	
+	/*
+	 * TODO Both of these below are breaking encapsulation
+	 */
+	
 	/**
 	 * @return index
 	 */
-	public TreeMap<String,TreeMap<String, ArrayList<Integer>>> getIndex(){
+	public TreeMap<String,TreeMap<String, ArrayList<Integer>>> getIndex(){ // TODO Remove
 		return index;
 	}
 	/**
 	 * @return count TreeMap
 	 */
 	public TreeMap<String, Integer> getCount(){
-		return count;
+		return count; // TODO Wrap in an unmodifiable map
 	}
 	
-		
+	/*
+	 * TODO Consdier adding more functionality (has and get methods similar to WordIndex)
+	 */
 }
 

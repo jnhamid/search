@@ -2,6 +2,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO Fix up formatting
+
 /**
  * Parses and stores command-line arguments into simple key = value pairs.
  *
@@ -48,17 +50,28 @@ public class ArgumentParser {
 		for(int i =0; i< args.length; i++) {
 			String line = args[i];
 			if(isFlag(line)) {
-				map.put(line, null);	
+				map.put(line, null);
+				
 				if(i + 1 != args.length) {
 					String next = args[i + 1];
 					if(isValue(next)) {
 						map.put(line, next);	
 					}
-					else {
+					else { // TODO Don't need the else... try to clean up a bit if possible
 						map.put(line, null);
 					}
 				}						
 			}			
+			
+			/* TODO
+			if (isFlag(args[i])) {
+				map.put(args[i], null);
+				
+				if (i + 1 != args.length && isValue(args[i + 1])) {
+					map.put(args[i], args[i + 1]);
+				}
+			}
+			*/
 		}
 	}
 				
@@ -103,6 +116,7 @@ public class ArgumentParser {
 	 * @see String#length()
 	 */
 	public static boolean isValue(String arg) {
+		// TODO return arg != null && etc.
 		if(arg != null && !arg.startsWith("-")) {
 			if(arg.length()>=1) {
 				return true;

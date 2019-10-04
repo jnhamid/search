@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+// TODO Fix up formatting a bit
 
 /**
  * Outputs several simple data structures in "pretty" JSON format where
@@ -34,9 +35,8 @@ public class SimpleJsonWriter {
 	 */
 	public static void asObject(Map<String, Integer> elements, Writer writer, int level) throws IOException {
 		Iterator<String> eterator=elements.keySet().iterator();
-		
-		System.out.println(elements.toString());
 		writer.write("{");
+		
 		if(eterator.hasNext()) {
 			String line = eterator.next();
 			
@@ -44,8 +44,8 @@ public class SimpleJsonWriter {
 			quote(line.toString(), writer, level+1);
 			writer.write(":");
 			writer.write(" " + elements.get(line));
-			
 		}
+		
 		while(eterator.hasNext()) {
 			String line = eterator.next();
 			writer.write(",\n");
@@ -54,6 +54,7 @@ public class SimpleJsonWriter {
 			writer.write(" " +elements.get(line));
 			
 		}
+		
 		writer.write("\n");
 		indent("}",writer,level);
 	}
@@ -94,6 +95,8 @@ public class SimpleJsonWriter {
 			return null;
 		}
 	}
+	
+	// TODO Fix this up and call your other methods
 
 	/**
 	 * Writes the elements as a nested pretty JSON object. The generic notation used
