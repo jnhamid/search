@@ -1,51 +1,54 @@
 import java.util.*;
 import java.io.IOException;
 import java.nio.file.Path;
+
 /**
- * @author Jnhamid
- *push1
+ * @author Jnhamid push1
  */
 public class InvertedIndex {
-	
+
 	/**
 	 * Private Identifier for our Custom data structure
 	 */
-	private final TreeMap<String, TreeMap<String, TreeSet<Integer>>> index; 
+	private final TreeMap<String, TreeMap<String, TreeSet<Integer>>> index;
 	/**
 	 * Map for count
 	 */
 	private final TreeMap<String, Integer> count;
-	
+
 	/**
 	 * Initial map
 	 */
-	public InvertedIndex(){
+	public InvertedIndex() {
 		index = new TreeMap<>();
 		count = new TreeMap<>();
 	}
-	
+
 	/**
 	 * Will add element to our Inverted Index.
-	 * @param word 
-	 * @param file 
-	 * @param pos 
+	 * 
+	 * @param word
+	 * @param file
+	 * @param pos
+	 * @throws IOException
 	 * 
 	 */
-	public void addElement(String word, String file, Integer pos) {
+	public void addElement(String word, String file, Integer pos) throws IOException {
 		index.putIfAbsent(word, new TreeMap<String, TreeSet<Integer>>());
 		index.get(word).putIfAbsent(file, new TreeSet<Integer>());
 		index.get(word).get(file).add(pos);
 		count.putIfAbsent(file, pos);
-		if(pos > count.get(file)) {
+		if (pos > count.get(file)) {
 			count.put(file, pos);
 		}
-		
-		
+
 	}
+
 	/**
-	 * will output to file, using a modified function from hw 
+	 * will output to file, using a modified function from hw
+	 * 
 	 * @param outFile
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void printIndex(String outFile) throws IOException {
 		SimpleJsonWriter.asDoubleNested(index, Path.of(outFile));
@@ -54,12 +57,27 @@ public class InvertedIndex {
 	/**
 	 * @return count TreeMap
 	 */
-	public Map<String, Integer> getCount(){
+	public Map<String, Integer> getCount() {
 		return Collections.unmodifiableMap(count);
 	}
-	
-	/*
-	 * TODO Consdier adding more functionality (has and get methods similar to WordIndex)
-	 */
-}
 
+	/**
+	 * @param word
+	 * @param path
+	 * @return if word has path
+	 */
+	public boolean hasWord(String word, String path) {
+		return hasWord(word) ? index.get(word).containsKey(path) : false;
+
+	}
+
+	/**
+	 * @param word
+	 * @return if index has word
+	 */
+	private boolean hasWord(String word) {
+
+		return index.containsKey(word);
+	}
+
+}

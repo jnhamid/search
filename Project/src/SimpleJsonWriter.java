@@ -37,24 +37,34 @@ public class SimpleJsonWriter {
 
 		if (eterator.hasNext()) {
 			String line = eterator.next();
+			asObjectHelper(elements, line, writer, level);
 
-			writer.write("\n");
-			quote(line.toString(), writer, level + 1);
-			writer.write(":");
-			writer.write(" " + elements.get(line));
 		}
 
 		while (eterator.hasNext()) {
 			String line = eterator.next();
-			writer.write(",\n");
-			quote(line.toString(), writer, level + 1);
-			writer.write(":");
-			writer.write(" " + elements.get(line));
+			writer.write(",");
+			asObjectHelper(elements, line, writer, level);
 
 		}
 
 		writer.write("\n");
 		indent("}", writer, level);
+	}
+
+	/**
+	 * @param elements
+	 * @param line
+	 * @param writer
+	 * @param level
+	 * @throws IOException
+	 */
+	public static void asObjectHelper(Map<String, Integer> elements, String line, Writer writer, int level)
+			throws IOException {
+		writer.write("\n");
+		quote(line.toString(), writer, level + 1);
+		writer.write(":");
+		writer.write(" " + elements.get(line));
 	}
 
 	/**
@@ -92,8 +102,6 @@ public class SimpleJsonWriter {
 		}
 	}
 
-	// TODO Fix this up and call your other methods
-
 	/**
 	 * Writes the elements as a nested pretty JSON object. The generic notation used
 	 * allows this method to be used for any type of map with any type of nested
@@ -110,59 +118,48 @@ public class SimpleJsonWriter {
 		writer.write("{");
 		if (eterator.hasNext()) {
 			String line = eterator.next();
-			writer.write("\n");
-			quote(line.toString(), writer, level + 1);
-			writer.write(": [\n");
-			Collection<Integer> nestedList = elements.get(line);
-			Iterator<Integer> Niterator = nestedList.iterator();
-			if (Niterator.hasNext()) {
-				Integer num = Niterator.next();
-				indent(num.toString(), writer, level + 2);
-			}
-			while (Niterator.hasNext()) {
-				Integer num = Niterator.next();
-				writer.write(",\n");
-				indent(num.toString(), writer, level + 2);
-			}
+			asNestedHelper(elements, line, writer, level);
 			writer.write("\n\t]");
 		}
 		while (eterator.hasNext()) {
 			String line = eterator.next();
-			writer.write(",\n");
-			quote(line.toString(), writer, level + 1);
-			writer.write(": [");
-			Collection<Integer> nestedList = elements.get(line);
-			Iterator<Integer> Niterator = nestedList.iterator();
-			if (Niterator.hasNext()) {
-				Integer num = Niterator.next();
-				writer.write("\n");
-				indent(num.toString(), writer, level + 2);
-			}
-			while (Niterator.hasNext()) {
-				Integer num = Niterator.next();
-				writer.write(",\n");
-				indent(num.toString(), writer, level + 2);
-			}
+			writer.write(",");
+			asNestedHelper(elements, line, writer, level);
 			writer.write("\n\t]");
 		}
 		writer.write("\n");
 		indent("}", writer, level);
+	}
 
-		/*
-		 * The generic notation:
-		 *
-		 * Map<String, ? extends Collection<Integer>> elements
-		 *
-		 * May be confusing. You can mentally replace it with:
-		 *
-		 * HashMap<String, HashSet<Integer>> elements
-		 */
+	/**
+	 * @param elements
+	 * @param line
+	 * @param writer
+	 * @param level
+	 * @throws IOException
+	 */
+	public static void asNestedHelper(TreeMap<String, TreeSet<Integer>> elements, String line, Writer writer, int level)
+			throws IOException {
+		writer.write("\n");
+		quote(line.toString(), writer, level + 1);
+		writer.write(": [\n");
+		Collection<Integer> nestedList = elements.get(line);
+		Iterator<Integer> Niterator = nestedList.iterator();
+		if (Niterator.hasNext()) {
+			Integer num = Niterator.next();
+			indent(num.toString(), writer, level + 2);
+		}
+		while (Niterator.hasNext()) {
+			Integer num = Niterator.next();
+			writer.write(",\n");
+			indent(num.toString(), writer, level + 2);
+		}
 	}
 
 	/**
 	 * Writes the elements as a nested pretty JSON object to file.
 	 *
-	 * @param index the elements to write
+	 * @param index  the elements to write
 	 * @param writer
 	 * @param level
 	 * @throws IOException
