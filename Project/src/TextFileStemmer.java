@@ -38,7 +38,6 @@ public class TextFileStemmer {
 		return uniqueStems(line, new SnowballStemmer(DEFAULT));
 	}
 	
-	// TODO Fix variable names... always starts with a lowercase letter
 
 	/**
 	 * Returns a set of unique (no duplicates) cleaned and stemmed words parsed
@@ -52,14 +51,13 @@ public class TextFileStemmer {
 	 * @see TextParser#parse(String)
 	 */
 	public static TreeSet<String> uniqueStems(String line, Stemmer stemmer) {
-		TreeSet<String> StemmedWords = new TreeSet<String>(); // TODO stemmed
-		String[] PLine = TextParser.parse(line); // TODO words or tokens
-		for(String words: PLine) {
-			// TODO String data = stemmer.stem(words).toString();
-			String data = (String) stemmer.stem(words.toString());
-			StemmedWords.add(data);
+		TreeSet<String> stemmed = new TreeSet<String>(); 
+		String[] words = TextParser.parse(line);
+		for(String word: words) {
+			String data = (String) stemmer.stem(word).toString();
+			stemmed.add(data);
 		}
-		return StemmedWords;
+		return stemmed;
 	}
 
 	/**
@@ -75,7 +73,7 @@ public class TextFileStemmer {
 	 */
 	public static TreeSet<String> uniqueStems(Path inputFile) throws IOException {
 		Stemmer stemmer = new SnowballStemmer(DEFAULT);
-		TreeSet<String> StemmedWords = new TreeSet<>();
+		TreeSet<String> stemmedWords = new TreeSet<>();
 		try (
 				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
 				
@@ -85,19 +83,16 @@ public class TextFileStemmer {
 			// only 1 line needs to be "in memory" at a time
 			// (realistically, an entire buffer of text is in memory at a time)
 			while (line!= null) {
-				String[] PLine = TextParser.parse(line); 
-				for(String words: PLine) {
-					String data = (String) stemmer.stem(words.toString());
-					StemmedWords.add(data);
+				String[] parsed = TextParser.parse(line); 
+				for(String words: parsed) {
+					String data = stemmer.stem(words).toString();
+					stemmedWords.add(data);
 				}
 				line  = reader.readLine();
 			}
 			
 			
 		}
-		catch (Exception e) { // TODO Remove catch block
-			throw new IOException("Unable to Parse File. ");
-		}
-		return StemmedWords;
+		return stemmedWords;
 	}
 }

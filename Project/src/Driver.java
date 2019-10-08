@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 /**
@@ -10,14 +12,7 @@ import java.time.Instant;
  * @version Fall 2019
  *
  */
-public class Driver {
-
-	/*
-	 * TODO The way we are handling arguments is programmer-specific. So the specific 
-	 * key/values pairs should be in Driver. Those flag/value pairs should not really
-	 * appear in the other classes.
-	 */
-	
+public class Driver {	
 	/**
 	 * Initializes the classes necessary based on the provided command-line
 	 * arguments. This includes (but is not limited to) how to build or search an
@@ -32,7 +27,40 @@ public class Driver {
 		Instant start = Instant.now();
 
 		ArgumentParser parse = new ArgumentParser(args);
-		InvertedIndexBuilder.build(index, parse);
+		
+		if(parse.hasFlag("-path") && parse.getPath("-path") != null) {
+			Path path = parse.getPath("-path");
+			if(Files.exists(path)) {
+				InvertedIndexBuilder.build(index, path);
+			}
+		}
+		
+		if(parse.hasFlag("-index") && parse.getString("-index") != null) {
+			try {
+				index.printIndex(parse.getString("-index"));
+			} 
+			catch (IOException e) {
+				System.out.println("Unable write index.");
+			}
+		}
+		if (parse.hasFlag("-index")) {
+			Path path = parse.getPath("-index", Path.of("index.json"));
+			try {
+				index.printIndex(path.toString());
+			}
+			catch (IOException e) {
+				System.out.println("Unable to write the index to path: " + path);
+			}
+		}
+		if (parse.hasFlag("-counts")) {
+			Path path = parse.getPath("-counts", Path.of("counts.json"));
+			try {
+				SimpleJsonWriter.asObject(index.getCount(), path);
+			}
+			catch (IOException e) {
+				System.out.println("Unable to write the word counts to path: " + path);
+			}
+		}
 		
 	
 		// calculate time elapsed and output

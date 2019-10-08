@@ -2,8 +2,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO Fix up formatting
-
 /**
  * Parses and stores command-line arguments into simple key = value pairs.
  *
@@ -18,7 +16,7 @@ public class ArgumentParser {
 	/**
 	 * Stores command-line arguments in key = value pairs.
 	 */
-	private final Map<String, String> map ;
+	private final Map<String, String> map;
 
 	/**
 	 * Initializes this argument map.
@@ -47,35 +45,18 @@ public class ArgumentParser {
 	 * @param args the command line arguments to parse
 	 */
 	public void parse(String[] args) {
-		for(int i =0; i< args.length; i++) {
-			String line = args[i];
-			if(isFlag(line)) {
-				map.put(line, null);
-				
-				if(i + 1 != args.length) {
-					String next = args[i + 1];
-					if(isValue(next)) {
-						map.put(line, next);	
-					}
-					else { // TODO Don't need the else... try to clean up a bit if possible
-						map.put(line, null);
-					}
-				}						
-			}			
-			
-			/* TODO
+		for (int i = 0; i < args.length; i++) {
+
 			if (isFlag(args[i])) {
 				map.put(args[i], null);
-				
+
 				if (i + 1 != args.length && isValue(args[i + 1])) {
 					map.put(args[i], args[i + 1]);
 				}
 			}
-			*/
 		}
+
 	}
-				
-			
 
 	/**
 	 * Determines whether the argument is a flag. Flags start with a dash "-"
@@ -89,21 +70,18 @@ public class ArgumentParser {
 	 */
 	public static boolean isFlag(String arg) {
 		try {
-			if(arg != null && arg.startsWith("-" )) {
-				if(arg.length()>1 ) {
+			if (arg != null && arg.startsWith("-")) {
+				if (arg.length() > 1) {
 					return true;
-					}
 				}
+			}
 			return false;
 
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			return false;
 		}
-			
-}
-		
-		
+
+	}
 
 	/**
 	 * Determines whether the argument is a value. Values do not start with a dash
@@ -116,14 +94,8 @@ public class ArgumentParser {
 	 * @see String#length()
 	 */
 	public static boolean isValue(String arg) {
-		// TODO return arg != null && etc.
-		if(arg != null && !arg.startsWith("-")) {
-			if(arg.length()>=1) {
-				return true;
-				}
-			}
-		return false;
-		}
+		return arg != null && !arg.startsWith("-") && arg.length() >= 1;
+	}
 
 	/**
 	 * Returns the number of unique flags.
@@ -151,7 +123,7 @@ public class ArgumentParser {
 	 * @return {@code true} if the flag is mapped to a non-null value
 	 */
 	public boolean hasValue(String flag) {
-		if(map.get(flag) == null) {
+		if (map.get(flag) == null) {
 			return false;
 		}
 		return map.containsKey(flag);
@@ -196,13 +168,13 @@ public class ArgumentParser {
 	 * @see Path#of(String, String...)
 	 */
 	public Path getPath(String flag) {
-		
+
 		String path = map.get(flag);
-		if(path != null) {
+		if (path != null) {
 			return Path.of(path);
 		}
 		return null;
-		
+
 	}
 
 	/**
