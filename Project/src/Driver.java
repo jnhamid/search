@@ -37,7 +37,6 @@ public class Driver {
 			}
 		} catch (IOException e) {
 			System.out.println("File is a directory");
-			e.printStackTrace();
 		}
 
 		if (parse.hasFlag("-index") && parse.getString("-index") != null) {
