@@ -5,6 +5,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -185,6 +186,100 @@ public class SimpleJsonWriter {
 		}
 		writer.write("\n");
 		indent("}", writer, level - 1);
+	}
+
+	/**
+	 * @param qSet
+	 * @param path
+	 * @param writer
+	 * @param level
+	 * @throws IOException
+	 */
+	public static void asQuery(Map<Query, ArrayList<Result>> qSet, Path path, Writer writer, int level)
+			throws IOException {
+		writer.write("{\n");
+		var iterator = qSet.keySet().iterator();
+
+		if (iterator.hasNext()) {
+			Query query = iterator.next();
+			indent(writer, level + 1);
+			writer.write("\"" + query.toString() + "\": [");
+			indent(writer, level + 1);
+			asQueryHelper(qSet, query, path, writer, level + 1);
+			writer.write("\n\t]");
+
+		}
+
+		while (iterator.hasNext()) {
+			Query query = iterator.next();
+			writer.write(",\n");
+			indent(writer, level + 1);
+			writer.write("\"" + query.toString() + "\": [");
+			indent(writer, level + 1);
+			asQueryHelper(qSet, query, path, writer, level + 1);
+			writer.write("\n\t]");
+		}
+		writer.write("\n}");
+
+	}
+
+	/**
+	 * queryHelper
+	 * 
+	 * @param qSet
+	 * @param nextQuery
+	 * @param path
+	 * @param writer
+	 * @param level
+	 * @throws IOException
+	 */
+	public static void asQueryHelper(Map<Query, ArrayList<Result>> qSet, Query nextQuery, Path path, Writer writer,
+			int level) throws IOException {
+		var innerIterator = qSet.get(nextQuery).iterator();
+
+		if (innerIterator.hasNext()) {
+			writer.write("\n");
+			indent(writer, level + 1);
+			writer.write("\t{\n");
+			indent(writer, level + 3);
+			var nexto = innerIterator.next();
+			writer.write(nexto.getFileNameString() + "\n");
+			indent(writer, level + 3);
+			writer.write(nexto.getCountString() + "\n");
+			indent(writer, level + 3);
+			writer.write(nexto.getScoreString() + "\n");
+			indent(writer, level + 2);
+			writer.write("}");
+			indent(writer, level - 1);
+		}
+		while (innerIterator.hasNext()) {
+			writer.write(",\n");
+			indent(writer, level + 2);
+			writer.write("{\n");
+			indent(writer, level + 3);
+			var nexto = innerIterator.next();
+			writer.write(nexto.getFileNameString() + "\n");
+			indent(writer, level + 3);
+			writer.write(nexto.getCountString() + "\n");
+			indent(writer, level + 3);
+			writer.write(nexto.getScoreString() + "\n");
+			indent(writer, level + 2);
+			writer.write("}");
+			indent(writer, level - 1);
+		}
+	}
+
+	/**
+	 * Overloads asQuery
+	 *
+	 * @param map
+	 * @param path
+	 * @throws IOException
+	 */
+	public static void asQuery(Map<Query, ArrayList<Result>> map, Path path) throws IOException {
+		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+			asQuery(map, path, writer, 0);
+		}
 	}
 
 	/**
