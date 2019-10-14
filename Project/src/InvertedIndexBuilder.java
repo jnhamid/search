@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
+// TODO Fix Javadoc, variable names, downcasting.
+
 /**
  * @author Jaden
  *
@@ -65,7 +67,7 @@ public class InvertedIndexBuilder {
 				String[] PLine = TextParser.parse(line);
 				for (String words : PLine) {
 					String data = (String) stemmer.stem(words.toString());
-					index.addElement(data, file.toString(), ++i);
+					index.addElement(data, file.toString(), ++i); // TODO Save result of file.toString() before while loop and reuse it, instead of calling again and again and again
 				}
 				line = reader.readLine();
 			}

@@ -2,6 +2,12 @@ import java.util.*;
 import java.io.IOException;
 import java.nio.file.Path;
 
+/*
+ * TODO Formatting. Javadoc. Needs more methods to make more reusable. Is it possible
+ * to access safely all of the data stored by this class?
+ */
+
+
 /**
  * @author Jnhamid push1
  */

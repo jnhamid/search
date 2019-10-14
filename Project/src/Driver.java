@@ -4,6 +4,12 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 
+/*
+ * TODO There are 2 warnings. I will not pass code with warnings in it.
+Javadoc: The method asNestedObject(TreeMap<String,TreeSet<Integer>>, Writer, int) in the type SimpleJsonWriter is not applicable for the arguments (Map, Writer, int)	SimpleJsonWriter.java	/Project/src	line 167	Java Problem
+Javadoc: The method asNestedObject(TreeMap<String,TreeSet<Integer>>, Writer, int) in the type SimpleJsonWriter is not applicable for the arguments (Map, Writer, int)	SimpleJsonWriter.java	/Project/src	line 220	Java Problem
+ */
+
 /**
  * Class responsible for running this project based on the provided command-line
  * arguments. See the README for details.
@@ -40,6 +46,7 @@ public class Driver {
 		}
 
 		if (parse.hasFlag("-index") && parse.getString("-index") != null) {
+			// TODO Remove this if block---redundant with block below.
 			try {
 				index.printIndex(parse.getString("-index"));
 			} catch (IOException e) {
@@ -69,4 +76,11 @@ public class Driver {
 		System.out.printf("Elapsed: %f seconds%n", seconds);
 	}
 
+	/*
+	 * TODO Fix formatting above. Decide on a consistent approach to using blank
+	 * lines and be consistent as to whether you have a try/catch inside an if or
+	 * the other way around.
+	 */
+	
+	// TODO Your main() method states it throws an IOException, but it looks like that is no longer true. Update.
 }

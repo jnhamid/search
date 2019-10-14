@@ -54,6 +54,10 @@ public class TextFileStemmer {
 		TreeSet<String> stemmed = new TreeSet<String>(); 
 		String[] words = TextParser.parse(line);
 		for(String word: words) {
+			/*
+			 * TODO Do not downcast! You already convert toString():
+			 * String data = stemmer.stem(word).toString();
+			 */
 			String data = (String) stemmer.stem(word).toString();
 			stemmed.add(data);
 		}
@@ -92,7 +96,7 @@ public class TextFileStemmer {
 			}
 			
 			
-		}
+		} // TODO Fix formatting in this method.
 		return stemmedWords;
 	}
 }
