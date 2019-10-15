@@ -10,7 +10,7 @@ import java.util.Map;
  * @version Fall 2019
  */
 
-//Test Commit
+//Test Commit TODO Remove this comment, make sure Javadoc does not have blank line between it and class declaration
 public class ArgumentParser {
 
 	/**
@@ -69,6 +69,7 @@ public class ArgumentParser {
 	 * @see String#length()
 	 */
 	public static boolean isFlag(String arg) {
+		// TODO Take similar approach to isValue below---should be 1 return statement.
 		try {
 			if (arg != null && arg.startsWith("-")) {
 				if (arg.length() > 1) {
@@ -123,6 +124,7 @@ public class ArgumentParser {
 	 * @return {@code true} if the flag is mapped to a non-null value
 	 */
 	public boolean hasValue(String flag) {
+		// TODO Can be simplified to return map.get(flag) == null;
 		if (map.get(flag) == null) {
 			return false;
 		}
@@ -167,7 +169,7 @@ public class ArgumentParser {
 	 *
 	 * @see Path#of(String, String...)
 	 */
-	public Path getPath(String flag) {
+	public Path getPath(String flag) { // TODO Be consistent with formatting
 
 		String path = map.get(flag);
 		if (path != null) {

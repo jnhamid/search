@@ -32,7 +32,7 @@ public class SimpleJsonWriter {
 	 * @throws IOException
 	 */
 	public static void asObject(Map<String, Integer> elements, Writer writer, int level) throws IOException {
-		Iterator<String> eterator = elements.keySet().iterator();
+		Iterator<String> eterator = elements.keySet().iterator(); // TODO Rename to "iterator" instead of "eterator"
 		writer.write("{");
 
 		if (eterator.hasNext()) {
@@ -53,6 +53,7 @@ public class SimpleJsonWriter {
 	}
 
 	/**
+	 * TODO Fill in this Javadoc comment!
 	 * @param elements
 	 * @param line
 	 * @param writer
@@ -114,7 +115,7 @@ public class SimpleJsonWriter {
 	 */
 	public static void asNestedObject(TreeMap<String, TreeSet<Integer>> elements, Writer writer, int level)
 			throws IOException {
-		Iterator<String> eterator = elements.keySet().iterator();
+		Iterator<String> eterator = elements.keySet().iterator(); // TODO Fix to have consistent formatting with other methods
 		writer.write("{");
 		if (eterator.hasNext()) {
 			String line = eterator.next();
@@ -132,6 +133,7 @@ public class SimpleJsonWriter {
 	}
 
 	/**
+	 * TODO Fill in this Javadoc!
 	 * @param elements
 	 * @param line
 	 * @param writer
@@ -139,7 +141,7 @@ public class SimpleJsonWriter {
 	 * @throws IOException
 	 */
 	public static void asNestedHelper(TreeMap<String, TreeSet<Integer>> elements, String line, Writer writer, int level)
-			throws IOException {
+			throws IOException { // TODO Formatting, variable names, etc. Make professional!
 		writer.write("\n");
 		quote(line.toString(), writer, level + 1);
 		writer.write(": [\n");
@@ -169,7 +171,7 @@ public class SimpleJsonWriter {
 	 */
 	private static void asDoubleNested(TreeMap<String, TreeMap<String, TreeSet<Integer>>> index, Writer writer,
 			Integer level) throws IOException {
-		var iterator = index.keySet().iterator();
+		var iterator = index.keySet().iterator(); // TODO Same comments as others.
 		writer.write("{");
 		if (iterator.hasNext()) {
 			String key = iterator.next();
@@ -187,6 +189,8 @@ public class SimpleJsonWriter {
 		indent("}", writer, level - 1);
 	}
 
+	// TODO Fix all of these Javadoc comments!
+	
 	/**
 	 * @param index
 	 * @param path
