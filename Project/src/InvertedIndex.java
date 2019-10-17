@@ -1,15 +1,8 @@
 import java.util.*;
 import java.io.IOException;
 import java.nio.file.Path;
-
-/*
- * TODO Formatting. Javadoc. Needs more methods to make more reusable. Is it possible
- * to access safely all of the data stored by this class?
- */
-
-
 /**
- * @author Jnhamid push1
+ * @author Jnhamid
  */
 public class InvertedIndex {
 
@@ -18,12 +11,12 @@ public class InvertedIndex {
 	 */
 	private final TreeMap<String, TreeMap<String, TreeSet<Integer>>> index;
 	/**
-	 * Map for count
+	 * Private Identifier for count data structure
 	 */
 	private final TreeMap<String, Integer> count;
 
 	/**
-	 * Initial map
+	 * Initialize maps
 	 */
 	public InvertedIndex() {
 		index = new TreeMap<>();
@@ -33,9 +26,9 @@ public class InvertedIndex {
 	/**
 	 * Will add element to our Inverted Index.
 	 * 
-	 * @param word
-	 * @param file
-	 * @param pos
+	 * @param word to be added
+	 * @param file to be added
+	 * @param pos  to be added
 	 * @throws IOException
 	 * 
 	 */
@@ -51,7 +44,7 @@ public class InvertedIndex {
 	}
 
 	/**
-	 * will output to file, using a modified function from hw
+	 * will output to file using method in SimpleJsonWriter
 	 * 
 	 * @param outFile
 	 * @throws IOException
@@ -61,13 +54,15 @@ public class InvertedIndex {
 	}
 
 	/**
-	 * @return count TreeMap
+	 * @return count as a unmodifiableMap
 	 */
 	public Map<String, Integer> getCount() {
 		return Collections.unmodifiableMap(count);
 	}
 
 	/**
+	 * Checks to see if word is in index at certain path
+	 * 
 	 * @param word
 	 * @param path
 	 * @return if word has path
@@ -78,12 +73,69 @@ public class InvertedIndex {
 	}
 
 	/**
+	 * checks to see if word is in index
+	 * 
 	 * @param word
 	 * @return if index has word
 	 */
 	private boolean hasWord(String word) {
-
 		return index.containsKey(word);
+	}
+
+	/**
+	 * checks if the map has the specific word and if word contain path.
+	 * 
+	 * @param word
+	 * @param path
+	 * @return if has word and path
+	 */
+	public boolean contains(String word, String path) {
+		return hasWord(word) ? index.get(word).containsKey(path) : false;
+	}
+
+	/**
+	 * checks if the map contains the specific word, path and index.
+	 * 
+	 * @param word
+	 * @param path
+	 * @param postion
+	 * @return if has word and path at postion
+	 */
+	public boolean contains(String word, String path, int postion) {
+		return contains(word, path) ? index.get(word).get(path).contains(postion) : false;
+	}
+
+	/**
+	 * checks if word has given position
+	 * 
+	 * @param location we looking for
+	 * @param word     to look in
+	 * @return if word exist
+	 */
+	public boolean hasLocation(String word, String location) {
+		if (hasWord(word)) {
+			return index.get(word).containsKey(location);
+		}
+		return false;
+	}
+
+	/**
+	 * returns how many words is in inverted index.
+	 * 
+	 * @return size of inverted index.
+	 */
+	public int size() {
+		return index.size();
+	}
+
+	/**
+	 * returns how many paths are found in word.
+	 * 
+	 * @param word to check
+	 * @return amount of paths, return 0 if not found
+	 */
+	public int size(String word) {
+		return hasWord(word) ? index.get(word).size() : 0;
 	}
 
 }

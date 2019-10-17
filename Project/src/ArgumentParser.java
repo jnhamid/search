@@ -9,8 +9,6 @@ import java.util.Map;
  * @author University of San Francisco
  * @version Fall 2019
  */
-
-//Test Commit TODO Remove this comment, make sure Javadoc does not have blank line between it and class declaration
 public class ArgumentParser {
 
 	/**
@@ -46,10 +44,8 @@ public class ArgumentParser {
 	 */
 	public void parse(String[] args) {
 		for (int i = 0; i < args.length; i++) {
-
 			if (isFlag(args[i])) {
 				map.put(args[i], null);
-
 				if (i + 1 != args.length && isValue(args[i + 1])) {
 					map.put(args[i], args[i + 1]);
 				}
@@ -69,19 +65,8 @@ public class ArgumentParser {
 	 * @see String#length()
 	 */
 	public static boolean isFlag(String arg) {
-		// TODO Take similar approach to isValue below---should be 1 return statement.
-		try {
-			if (arg != null && arg.startsWith("-")) {
-				if (arg.length() > 1) {
-					return true;
-				}
-			}
-			return false;
-
-		} catch (Exception e) {
-			return false;
-		}
-
+		return arg != null && arg.startsWith("-") && arg.length() > 1;
+				
 	}
 
 	/**
@@ -124,11 +109,8 @@ public class ArgumentParser {
 	 * @return {@code true} if the flag is mapped to a non-null value
 	 */
 	public boolean hasValue(String flag) {
-		// TODO Can be simplified to return map.get(flag) == null;
-		if (map.get(flag) == null) {
-			return false;
-		}
-		return map.containsKey(flag);
+		return map.get(flag) == null;
+		
 	}
 
 	/**
@@ -169,8 +151,7 @@ public class ArgumentParser {
 	 *
 	 * @see Path#of(String, String...)
 	 */
-	public Path getPath(String flag) { // TODO Be consistent with formatting
-
+	public Path getPath(String flag) { 
 		String path = map.get(flag);
 		if (path != null) {
 			return Path.of(path);

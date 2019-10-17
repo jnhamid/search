@@ -54,11 +54,7 @@ public class TextFileStemmer {
 		TreeSet<String> stemmed = new TreeSet<String>(); 
 		String[] words = TextParser.parse(line);
 		for(String word: words) {
-			/*
-			 * TODO Do not downcast! You already convert toString():
-			 * String data = stemmer.stem(word).toString();
-			 */
-			String data = (String) stemmer.stem(word).toString();
+			String data = stemmer.stem(word).toString();
 			stemmed.add(data);
 		}
 		return stemmed;
@@ -80,12 +76,8 @@ public class TextFileStemmer {
 		TreeSet<String> stemmedWords = new TreeSet<>();
 		try (
 				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
-				
-		) {
+			) {
 			String line = reader.readLine();
-
-			// only 1 line needs to be "in memory" at a time
-			// (realistically, an entire buffer of text is in memory at a time)
 			while (line!= null) {
 				String[] parsed = TextParser.parse(line); 
 				for(String words: parsed) {
@@ -94,9 +86,7 @@ public class TextFileStemmer {
 				}
 				line  = reader.readLine();
 			}
-			
-			
-		} // TODO Fix formatting in this method.
+		}
 		return stemmedWords;
 	}
 }

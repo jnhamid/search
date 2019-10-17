@@ -32,20 +32,18 @@ public class SimpleJsonWriter {
 	 * @throws IOException
 	 */
 	public static void asObject(Map<String, Integer> elements, Writer writer, int level) throws IOException {
-		Iterator<String> eterator = elements.keySet().iterator(); // TODO Rename to "iterator" instead of "eterator"
+		Iterator<String> iterator = elements.keySet().iterator();
 		writer.write("{");
 
-		if (eterator.hasNext()) {
-			String line = eterator.next();
+		if (iterator.hasNext()) {
+			String line = iterator.next();
 			asObjectHelper(elements, line, writer, level);
-
 		}
 
-		while (eterator.hasNext()) {
-			String line = eterator.next();
+		while (iterator.hasNext()) {
+			String line = iterator.next();
 			writer.write(",");
 			asObjectHelper(elements, line, writer, level);
-
 		}
 
 		writer.write("\n");
@@ -53,7 +51,8 @@ public class SimpleJsonWriter {
 	}
 
 	/**
-	 * TODO Fill in this Javadoc comment!
+	 * Helper method for asObject();
+	 * 
 	 * @param elements
 	 * @param line
 	 * @param writer
@@ -113,48 +112,53 @@ public class SimpleJsonWriter {
 	 * @param level    the initial indent level
 	 * @throws IOException
 	 */
-	public static void asNestedObject(TreeMap<String, TreeSet<Integer>> elements, Writer writer, int level)
+	public static void asNestedObject(Map<String, TreeSet<Integer>> elements, Writer writer, int level)
 			throws IOException {
-		Iterator<String> eterator = elements.keySet().iterator(); // TODO Fix to have consistent formatting with other methods
+		Iterator<String> iterator = elements.keySet().iterator();
 		writer.write("{");
-		if (eterator.hasNext()) {
-			String line = eterator.next();
+		if (iterator.hasNext()) {
+			String line = iterator.next();
 			asNestedHelper(elements, line, writer, level);
 			writer.write("\n\t]");
 		}
-		while (eterator.hasNext()) {
-			String line = eterator.next();
+
+		while (iterator.hasNext()) {
+			String line = iterator.next();
 			writer.write(",");
 			asNestedHelper(elements, line, writer, level);
 			writer.write("\n\t]");
 		}
+
 		writer.write("\n");
 		indent("}", writer, level);
 	}
 
 	/**
-	 * TODO Fill in this Javadoc!
+	 * Helper for asNestedObject();
+	 * 
 	 * @param elements
 	 * @param line
 	 * @param writer
 	 * @param level
 	 * @throws IOException
 	 */
-	public static void asNestedHelper(TreeMap<String, TreeSet<Integer>> elements, String line, Writer writer, int level)
-			throws IOException { // TODO Formatting, variable names, etc. Make professional!
+	public static void asNestedHelper(Map<String, TreeSet<Integer>> elements, String line, Writer writer, int level)
+			throws IOException {
 		writer.write("\n");
 		quote(line.toString(), writer, level + 1);
 		writer.write(": [\n");
 		Collection<Integer> nestedList = elements.get(line);
-		Iterator<Integer> Niterator = nestedList.iterator();
-		if (Niterator.hasNext()) {
-			Integer num = Niterator.next();
-			indent(num.toString(), writer, level + 2);
+		Iterator<Integer> iterator = nestedList.iterator();
+
+		if (iterator.hasNext()) {
+			String postion = iterator.next().toString();
+			indent(postion, writer, level + 2);
 		}
-		while (Niterator.hasNext()) {
-			Integer num = Niterator.next();
+
+		while (iterator.hasNext()) {
+			String postion = iterator.next().toString();
 			writer.write(",\n");
-			indent(num.toString(), writer, level + 2);
+			indent(postion, writer, level + 2);
 		}
 	}
 
@@ -169,34 +173,35 @@ public class SimpleJsonWriter {
 	 * @see #asNestedObject(Map, Writer, int)
 	 * 
 	 */
-	private static void asDoubleNested(TreeMap<String, TreeMap<String, TreeSet<Integer>>> index, Writer writer,
+	private static void asDoubleNested(Map<String, TreeMap<String, TreeSet<Integer>>> index, Writer writer,
 			Integer level) throws IOException {
-		var iterator = index.keySet().iterator(); // TODO Same comments as others.
+		var iterator = index.keySet().iterator();
 		writer.write("{");
+
 		if (iterator.hasNext()) {
 			String key = iterator.next();
 			writer.write("\n\t");
 			writer.write('"' + key + '"' + ": ");
 			asNestedObject(index.get(key), writer, level + 1);
 		}
+
 		while (iterator.hasNext()) {
 			String key = iterator.next();
 			writer.write(",\n\t");
 			writer.write('"' + key + '"' + ": ");
 			asNestedObject(index.get(key), writer, level + 1);
 		}
+
 		writer.write("\n");
 		indent("}", writer, level - 1);
 	}
 
-	// TODO Fix all of these Javadoc comments!
-	
 	/**
 	 * @param index
 	 * @param path
 	 * @throws IOException
 	 */
-	public static void asDoubleNested(TreeMap<String, TreeMap<String, TreeSet<Integer>>> index, Path path)
+	public static void asDoubleNested(Map<String, TreeMap<String, TreeSet<Integer>>> index, Path path)
 			throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asDoubleNested(index, writer, 0);
@@ -208,7 +213,7 @@ public class SimpleJsonWriter {
 	 * @param path
 	 * @throws IOException
 	 */
-	public static void asNestedObject(TreeMap<String, TreeSet<Integer>> elements, Path path) throws IOException {
+	public static void asNestedObject(Map<String, TreeSet<Integer>> elements, Path path) throws IOException {
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asNestedObject(elements, writer, 0);
@@ -223,7 +228,7 @@ public class SimpleJsonWriter {
 	 *
 	 * @see #asNestedObject(Map, Writer, int)
 	 */
-	public static String asNestedObject(TreeMap<String, TreeSet<Integer>> elements) {
+	public static String asNestedObject(Map<String, TreeSet<Integer>> elements) {
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try {
 			StringWriter writer = new StringWriter();

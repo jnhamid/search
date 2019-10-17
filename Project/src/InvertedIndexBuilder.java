@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
-// TODO Fix Javadoc, variable names, downcasting.
 
 /**
  * @author Jaden
@@ -60,14 +59,13 @@ public class InvertedIndexBuilder {
 		Stemmer stemmer = new SnowballStemmer(DEFAULT);
 		try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8);) {
 			String line = reader.readLine();
-			// only 1 line needs to be "in memory" at a time
-			// (realistically, an entire buffer of text is in memory at a time)
 			int i = 0;
+			String fileName = file.toString();
 			while (line != null) {
-				String[] PLine = TextParser.parse(line);
-				for (String words : PLine) {
-					String data = (String) stemmer.stem(words.toString());
-					index.addElement(data, file.toString(), ++i); // TODO Save result of file.toString() before while loop and reuse it, instead of calling again and again and again
+				String[] parsed = TextParser.parse(line);
+				for (String word : parsed) {
+					String data = stemmer.stem(word).toString();
+					index.addElement(data, fileName, ++i);
 				}
 				line = reader.readLine();
 			}
