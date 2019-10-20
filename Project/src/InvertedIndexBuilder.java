@@ -9,9 +9,11 @@ import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 
+// TODO I'm going to stop marking everywhere you left off a description for your Javadoc. Go through your code and fix it everywhere!
+
 /**
  * @author Jaden
- *
+ * TODO DESCRIPTION
  */
 public class InvertedIndexBuilder {
 
@@ -23,14 +25,15 @@ public class InvertedIndexBuilder {
 	/**
 	 * Will build index by traversing files
 	 * 
-	 * @param index
-	 * @param path
+	 * @param index TODO DESCRIPTION
+	 * @param path TODO DESCRIPTION
 	 * @throws IOException
 	 */
 	public static void build(InvertedIndex index, Path path) throws IOException {
 		if (Files.isRegularFile(path)) {
 			addPath(index, path);
 		} else {
+			// TODO Might as well make a getTextFiles(Path) method that returns this list... more functionality!
 			for (Path newPath : Files.walk(path, FileVisitOption.FOLLOW_LINKS).collect(Collectors.toList())) {
 				if (isTextFile(newPath)) {
 					addPath(index, newPath);
@@ -40,7 +43,8 @@ public class InvertedIndexBuilder {
 	}
 
 	/**
-	 * @param path
+	 *  TODO DESCRIPTION
+	 * @param path  TODO DESCRIPTION
 	 * @return if its a text file
 	 */
 	public static boolean isTextFile(Path path) {
@@ -51,8 +55,8 @@ public class InvertedIndexBuilder {
 	/**
 	 * Adds Path
 	 * 
-	 * @param index
-	 * @param file
+	 * @param index TODO DESCRIPTION
+	 * @param file TODO DESCRIPTION
 	 * @throws IOException
 	 */
 	public static void addPath(InvertedIndex index, Path file) throws IOException {

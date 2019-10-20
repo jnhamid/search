@@ -53,10 +53,10 @@ public class SimpleJsonWriter {
 	/**
 	 * Helper method for asObject();
 	 * 
-	 * @param elements
-	 * @param line
-	 * @param writer
-	 * @param level
+	 * @param elements TODO DESCRIPTION
+	 * @param line TODO DESCRIPTION
+	 * @param writer TODO DESCRIPTION
+	 * @param level TODO DESCRIPTION
 	 * @throws IOException
 	 */
 	public static void asObjectHelper(Map<String, Integer> elements, String line, Writer writer, int level)
@@ -136,10 +136,10 @@ public class SimpleJsonWriter {
 	/**
 	 * Helper for asNestedObject();
 	 * 
-	 * @param elements
-	 * @param line
-	 * @param writer
-	 * @param level
+	 * @param elements TODO DESCRIPTION
+	 * @param line TODO DESCRIPTION
+	 * @param writer TODO DESCRIPTION
+	 * @param level TODO DESCRIPTION
 	 * @throws IOException
 	 */
 	public static void asNestedHelper(Map<String, TreeSet<Integer>> elements, String line, Writer writer, int level)
@@ -166,8 +166,8 @@ public class SimpleJsonWriter {
 	 * Writes the elements as a nested pretty JSON object to file.
 	 *
 	 * @param index  the elements to write
-	 * @param writer
-	 * @param level
+	 * @param writer TODO DESCRIPTION
+	 * @param level TODO DESCRIPTION
 	 * @throws IOException
 	 *
 	 * @see #asNestedObject(Map, Writer, int)
