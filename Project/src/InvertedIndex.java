@@ -1,6 +1,18 @@
 import java.util.*;
 import java.io.IOException;
 import java.nio.file.Path;
+
+// TODO These are still issues: https://github.com/usf-cs212-fall2019/project-jnhamid/blob/b2c5b0772ba3c61240dac5f62cdfd2deacc90acf/Project/src/InvertedIndex.java#L6-L7
+
+/*
+ * TODO Is it possible to safely get all of the elements from index? Right now, NONE of the elements
+ * can be returned. You have the contains methods, but not the get methods.
+ * 
+ * public Set<String> getWords()
+ * public Set<String> getLocations(String word)
+ * public Set<Integer> getPositions(String word, String location)
+ */
+
 /**
  * @author Jnhamid
  */
@@ -60,6 +72,7 @@ public class InvertedIndex {
 		return Collections.unmodifiableMap(count);
 	}
 
+	// TODO Remove this---duplicate of contains(String, String)
 	/**
 	 * Checks to see if word is in index at certain path
 	 * 
@@ -72,6 +85,9 @@ public class InvertedIndex {
 
 	}
 
+	/*
+	 * TODO Rename this to "contains" to match your other methods.
+	 */
 	/**
 	 * checks to see if word is in index
 	 * 
