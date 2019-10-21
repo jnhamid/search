@@ -23,10 +23,10 @@ public class TextFileStemmer {
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 
 	/**
-	 * Returns a set of unique (no duplicates) cleaned and stemmed words parsed
-	 * from the provided line.
+	 * Returns a set of unique (no duplicates) cleaned and stemmed words parsed from
+	 * the provided line.
 	 *
-	 * @param line    the line of words to clean, split, and stem
+	 * @param line the line of words to clean, split, and stem
 	 * @return a sorted set of unique cleaned and stemmed words
 	 *
 	 * @see SnowballStemmer
@@ -37,11 +37,10 @@ public class TextFileStemmer {
 		// THIS IS PROVIDED FOR YOU; NO NEED TO MODIFY
 		return uniqueStems(line, new SnowballStemmer(DEFAULT));
 	}
-	
 
 	/**
-	 * Returns a set of unique (no duplicates) cleaned and stemmed words parsed
-	 * from the provided line.
+	 * Returns a set of unique (no duplicates) cleaned and stemmed words parsed from
+	 * the provided line.
 	 *
 	 * @param line    the line of words to clean, split, and stem
 	 * @param stemmer the stemmer to use
@@ -51,9 +50,9 @@ public class TextFileStemmer {
 	 * @see TextParser#parse(String)
 	 */
 	public static TreeSet<String> uniqueStems(String line, Stemmer stemmer) {
-		TreeSet<String> stemmed = new TreeSet<String>(); 
+		TreeSet<String> stemmed = new TreeSet<String>();
 		String[] words = TextParser.parse(line);
-		for(String word: words) {
+		for (String word : words) {
 			String data = stemmer.stem(word).toString();
 			stemmed.add(data);
 		}
@@ -74,17 +73,15 @@ public class TextFileStemmer {
 	public static TreeSet<String> uniqueStems(Path inputFile) throws IOException {
 		Stemmer stemmer = new SnowballStemmer(DEFAULT);
 		TreeSet<String> stemmedWords = new TreeSet<>();
-		try (
-				BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);
-			) {
+		try (BufferedReader reader = Files.newBufferedReader(inputFile, StandardCharsets.UTF_8);) {
 			String line = reader.readLine();
-			while (line!= null) {
-				String[] parsed = TextParser.parse(line); 
-				for(String words: parsed) {
+			while (line != null) {
+				String[] parsed = TextParser.parse(line);
+				for (String words : parsed) {
 					String data = stemmer.stem(words).toString();
 					stemmedWords.add(data);
 				}
-				line  = reader.readLine();
+				line = reader.readLine();
 			}
 		}
 		return stemmedWords;

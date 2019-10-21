@@ -66,7 +66,7 @@ public class ArgumentParser {
 	 */
 	public static boolean isFlag(String arg) {
 		return arg != null && arg.startsWith("-") && arg.length() > 1;
-				
+
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class ArgumentParser {
 	 */
 	public boolean hasValue(String flag) {
 		return map.get(flag) == null;
-		
+
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class ArgumentParser {
 	 *
 	 * @see Path#of(String, String...)
 	 */
-	public Path getPath(String flag) { 
+	public Path getPath(String flag) {
 		String path = map.get(flag);
 		if (path != null) {
 			return Path.of(path);

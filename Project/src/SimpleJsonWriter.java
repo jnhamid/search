@@ -53,10 +53,10 @@ public class SimpleJsonWriter {
 	/**
 	 * Helper method for asObject();
 	 * 
-	 * @param elements TODO DESCRIPTION
-	 * @param line TODO DESCRIPTION
-	 * @param writer TODO DESCRIPTION
-	 * @param level TODO DESCRIPTION
+	 * @param elements the elements to write
+	 * @param line     the line from element that is getting written
+	 * @param writer   the writer to use
+	 * @param level    the initial indent level
 	 * @throws IOException
 	 */
 	public static void asObjectHelper(Map<String, Integer> elements, String line, Writer writer, int level)
@@ -136,10 +136,10 @@ public class SimpleJsonWriter {
 	/**
 	 * Helper for asNestedObject();
 	 * 
-	 * @param elements TODO DESCRIPTION
-	 * @param line TODO DESCRIPTION
-	 * @param writer TODO DESCRIPTION
-	 * @param level TODO DESCRIPTION
+	 * @param elements the element to write
+	 * @param line     the line of element to write
+	 * @param writer   the writer to use
+	 * @param level    the inital indent level
 	 * @throws IOException
 	 */
 	public static void asNestedHelper(Map<String, TreeSet<Integer>> elements, String line, Writer writer, int level)
@@ -166,8 +166,8 @@ public class SimpleJsonWriter {
 	 * Writes the elements as a nested pretty JSON object to file.
 	 *
 	 * @param index  the elements to write
-	 * @param writer TODO DESCRIPTION
-	 * @param level TODO DESCRIPTION
+	 * @param writer the writer to use
+	 * @param level  the inital indent level
 	 * @throws IOException
 	 *
 	 * @see #asNestedObject(Map, Writer, int)
@@ -197,20 +197,24 @@ public class SimpleJsonWriter {
 	}
 
 	/**
-	 * @param index
-	 * @param path
+	 * Calls the overloaded asDoubleNested() just taking in the element and the path
+	 * 
+	 * @param elements the Map that is being written to
+	 * @param path     the path that is getting written
 	 * @throws IOException
 	 */
-	public static void asDoubleNested(Map<String, TreeMap<String, TreeSet<Integer>>> index, Path path)
+	public static void asDoubleNested(Map<String, TreeMap<String, TreeSet<Integer>>> elements, Path path)
 			throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
-			asDoubleNested(index, writer, 0);
+			asDoubleNested(elements, writer, 0);
 		}
 	}
 
 	/**
-	 * @param elements
-	 * @param path
+	 * Calls the overloaded asNestedObject() just taking the element and the path
+	 * 
+	 * @param elements the Map that is being written to
+	 * @param path     the path that is getting written
 	 * @throws IOException
 	 */
 	public static void asNestedObject(Map<String, TreeSet<Integer>> elements, Path path) throws IOException {

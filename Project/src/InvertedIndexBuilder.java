@@ -5,15 +5,12 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
+import java.util.List;
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
-
-// TODO I'm going to stop marking everywhere you left off a description for your Javadoc. Go through your code and fix it everywhere!
-
 /**
- * @author Jaden
- * TODO DESCRIPTION
+ * @author Jaden This is a Builder class for our InvertedIndex class.
  */
 public class InvertedIndexBuilder {
 
@@ -25,16 +22,15 @@ public class InvertedIndexBuilder {
 	/**
 	 * Will build index by traversing files
 	 * 
-	 * @param index TODO DESCRIPTION
-	 * @param path TODO DESCRIPTION
+	 * @param index The InvertedIndex that is getting built
+	 * @param path  The Path that is getting checked
 	 * @throws IOException
 	 */
 	public static void build(InvertedIndex index, Path path) throws IOException {
 		if (Files.isRegularFile(path)) {
 			addPath(index, path);
 		} else {
-			// TODO Might as well make a getTextFiles(Path) method that returns this list... more functionality!
-			for (Path newPath : Files.walk(path, FileVisitOption.FOLLOW_LINKS).collect(Collectors.toList())) {
+			for (Path newPath : getTextFiles(path)) {
 				if (isTextFile(newPath)) {
 					addPath(index, newPath);
 				}
@@ -43,8 +39,9 @@ public class InvertedIndexBuilder {
 	}
 
 	/**
-	 *  TODO DESCRIPTION
-	 * @param path  TODO DESCRIPTION
+	 * Checks to see if path is a text file and not a directory or some trash file
+	 * 
+	 * @param path file that you are checking
 	 * @return if its a text file
 	 */
 	public static boolean isTextFile(Path path) {
@@ -53,10 +50,21 @@ public class InvertedIndexBuilder {
 	}
 
 	/**
-	 * Adds Path
+	 * Gets a list of files by walking the directory or file
 	 * 
-	 * @param index TODO DESCRIPTION
-	 * @param file TODO DESCRIPTION
+	 * @param path path or directory that needs to be traversed
+	 * @return a list of text files
+	 * @throws IOException
+	 */
+	public static List<Path> getTextFiles(Path path) throws IOException {
+		return Files.walk(path, FileVisitOption.FOLLOW_LINKS).collect(Collectors.toList());
+	}
+
+	/**
+	 * Adds Path to index
+	 * 
+	 * @param index the InvertedIndex that the file is getting added to
+	 * @param file  the Path that is getting added to index.
 	 * @throws IOException
 	 */
 	public static void addPath(InvertedIndex index, Path file) throws IOException {

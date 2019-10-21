@@ -2,19 +2,8 @@ import java.util.*;
 import java.io.IOException;
 import java.nio.file.Path;
 
-// TODO These are still issues: https://github.com/usf-cs212-fall2019/project-jnhamid/blob/b2c5b0772ba3c61240dac5f62cdfd2deacc90acf/Project/src/InvertedIndex.java#L6-L7
-
-/*
- * TODO Is it possible to safely get all of the elements from index? Right now, NONE of the elements
- * can be returned. You have the contains methods, but not the get methods.
- * 
- * public Set<String> getWords()
- * public Set<String> getLocations(String word)
- * public Set<Integer> getPositions(String word, String location)
- */
-
 /**
- * @author Jnhamid
+ * @author Jnhamid This is the class for our Custom Data Structure
  */
 public class InvertedIndex {
 
@@ -58,7 +47,7 @@ public class InvertedIndex {
 	/**
 	 * will output to file using method in SimpleJsonWriter
 	 * 
-	 * @param outFile
+	 * @param outFile file name of file that is getting written
 	 * @throws IOException
 	 */
 	public void printIndex(String outFile) throws IOException {
@@ -66,55 +55,41 @@ public class InvertedIndex {
 	}
 
 	/**
+	 * getter for count
+	 * 
 	 * @return count as a unmodifiableMap
 	 */
 	public Map<String, Integer> getCount() {
 		return Collections.unmodifiableMap(count);
 	}
 
-	// TODO Remove this---duplicate of contains(String, String)
-	/**
-	 * Checks to see if word is in index at certain path
-	 * 
-	 * @param word
-	 * @param path
-	 * @return if word has path
-	 */
-	public boolean hasWord(String word, String path) {
-		return hasWord(word) ? index.get(word).containsKey(path) : false;
-
-	}
-
-	/*
-	 * TODO Rename this to "contains" to match your other methods.
-	 */
 	/**
 	 * checks to see if word is in index
 	 * 
-	 * @param word
+	 * @param word word that is getting checked
 	 * @return if index has word
 	 */
-	private boolean hasWord(String word) {
+	private boolean contains(String word) {
 		return index.containsKey(word);
 	}
 
 	/**
 	 * checks if the map has the specific word and if word contain path.
 	 * 
-	 * @param word
-	 * @param path
+	 * @param word word that is getting checked
+	 * @param path path that is getting checked
 	 * @return if has word and path
 	 */
 	public boolean contains(String word, String path) {
-		return hasWord(word) ? index.get(word).containsKey(path) : false;
+		return contains(word) ? index.get(word).containsKey(path) : false;
 	}
 
 	/**
 	 * checks if the map contains the specific word, path and index.
 	 * 
-	 * @param word
-	 * @param path
-	 * @param postion
+	 * @param word    word that is getting checked
+	 * @param path    path that is getting checked
+	 * @param postion postion that is getting checked
 	 * @return if has word and path at postion
 	 */
 	public boolean contains(String word, String path, int postion) {
@@ -129,10 +104,42 @@ public class InvertedIndex {
 	 * @return if word exist
 	 */
 	public boolean hasLocation(String word, String location) {
-		if (hasWord(word)) {
+		if (contains(word)) {
 			return index.get(word).containsKey(location);
 		}
 		return false;
+	}
+
+	/**
+	 * getter for set of words
+	 * 
+	 * @return an unmodifiable set of words
+	 */
+	public Set<String> getWords() {
+		return Collections.unmodifiableSet(index.keySet());
+
+	}
+
+	/**
+	 * getter for set of locations
+	 * 
+	 * @param word key value for locations
+	 * @return an unmodifiable set of Locations
+	 */
+	public Set<String> getLocations(String word) {
+		return Collections.unmodifiableSet(index.get(word).keySet());
+	}
+
+	/**
+	 * getter for set of postions
+	 * 
+	 * @param word
+	 * @param location
+	 * @return an unmodifiable set of Positions
+	 */
+	public Set<Integer> getPositions(String word, String location) {
+		return Collections.unmodifiableSet(index.get(word).get(location));
+
 	}
 
 	/**
@@ -151,7 +158,7 @@ public class InvertedIndex {
 	 * @return amount of paths, return 0 if not found
 	 */
 	public int size(String word) {
-		return hasWord(word) ? index.get(word).size() : 0;
+		return contains(word) ? index.get(word).size() : 0;
 	}
 
 }
