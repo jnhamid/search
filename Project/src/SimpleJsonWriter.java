@@ -102,16 +102,6 @@ public class SimpleJsonWriter {
 		}
 	}
 	
-	/*
-	 * TODO Need to upcast this further to make this method work with more types of
-	 * objects. Use the type from the homework:
-	 * 
-	 * public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Writer writer, int level) throws IOException {
-	 * https://github.com/usf-cs212-fall2019/template-simplejsonwriter/blob/master/SimpleJsonWriter/src/SimpleJsonWriter.java#L135
-	 * 
-	 * ...the implementation should still work without making any other changes
-	 */
-
 	/**
 	 * Writes the elements as a nested pretty JSON object. The generic notation used
 	 * allows this method to be used for any type of map with any type of nested
@@ -122,7 +112,7 @@ public class SimpleJsonWriter {
 	 * @param level    the initial indent level
 	 * @throws IOException
 	 */
-	public static void asNestedObject(Map<String, TreeSet<Integer>> elements, Writer writer, int level)
+	public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Writer writer, int level)
 			throws IOException {
 		Iterator<String> iterator = elements.keySet().iterator();
 		writer.write("{");
@@ -152,7 +142,7 @@ public class SimpleJsonWriter {
 	 * @param level    the inital indent level
 	 * @throws IOException
 	 */
-	public static void asNestedHelper(Map<String, TreeSet<Integer>> elements, String line, Writer writer, int level)
+	public static void asNestedHelper(Map<String, ? extends Collection<Integer>> elements, String line, Writer writer, int level)
 			throws IOException {
 		writer.write("\n");
 		quote(line.toString(), writer, level + 1);
@@ -227,7 +217,7 @@ public class SimpleJsonWriter {
 	 * @param path     the path that is getting written
 	 * @throws IOException
 	 */
-	public static void asNestedObject(Map<String, TreeSet<Integer>> elements, Path path) throws IOException { // TODO Same as above
+	public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Path path) throws IOException { 
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asNestedObject(elements, writer, 0);
@@ -242,7 +232,7 @@ public class SimpleJsonWriter {
 	 *
 	 * @see #asNestedObject(Map, Writer, int)
 	 */
-	public static String asNestedObject(Map<String, TreeSet<Integer>> elements) { // TODO Same as above
+	public static String asNestedObject(Map<String, ? extends Collection<Integer>> elements) {
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try {
 			StringWriter writer = new StringWriter();
