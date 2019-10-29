@@ -101,6 +101,16 @@ public class SimpleJsonWriter {
 			return null;
 		}
 	}
+	
+	/*
+	 * TODO Need to upcast this further to make this method work with more types of
+	 * objects. Use the type from the homework:
+	 * 
+	 * public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Writer writer, int level) throws IOException {
+	 * https://github.com/usf-cs212-fall2019/template-simplejsonwriter/blob/master/SimpleJsonWriter/src/SimpleJsonWriter.java#L135
+	 * 
+	 * ...the implementation should still work without making any other changes
+	 */
 
 	/**
 	 * Writes the elements as a nested pretty JSON object. The generic notation used
@@ -217,7 +227,7 @@ public class SimpleJsonWriter {
 	 * @param path     the path that is getting written
 	 * @throws IOException
 	 */
-	public static void asNestedObject(Map<String, TreeSet<Integer>> elements, Path path) throws IOException {
+	public static void asNestedObject(Map<String, TreeSet<Integer>> elements, Path path) throws IOException { // TODO Same as above
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asNestedObject(elements, writer, 0);
@@ -232,7 +242,7 @@ public class SimpleJsonWriter {
 	 *
 	 * @see #asNestedObject(Map, Writer, int)
 	 */
-	public static String asNestedObject(Map<String, TreeSet<Integer>> elements) {
+	public static String asNestedObject(Map<String, TreeSet<Integer>> elements) { // TODO Same as above
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try {
 			StringWriter writer = new StringWriter();

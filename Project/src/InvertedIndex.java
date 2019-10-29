@@ -69,7 +69,7 @@ public class InvertedIndex {
 	 * @param word word that is getting checked
 	 * @return if index has word
 	 */
-	private boolean contains(String word) {
+	private boolean contains(String word) { // TODO Make public
 		return index.containsKey(word);
 	}
 
@@ -81,6 +81,8 @@ public class InvertedIndex {
 	 * @return if has word and path
 	 */
 	public boolean contains(String word, String path) {
+		// TODO Love use of ternary operator, but not really necessary...
+		// TODO return contains(word) && index.get(word).containsKey(path);
 		return contains(word) ? index.get(word).containsKey(path) : false;
 	}
 
@@ -103,7 +105,7 @@ public class InvertedIndex {
 	 * @param word     to look in
 	 * @return if word exist
 	 */
-	public boolean hasLocation(String word, String location) {
+	public boolean hasLocation(String word, String location) { // TODO Remove? This is the same as contains(word, path)
 		if (contains(word)) {
 			return index.get(word).containsKey(location);
 		}
@@ -127,6 +129,11 @@ public class InvertedIndex {
 	 * @return an unmodifiable set of Locations
 	 */
 	public Set<String> getLocations(String word) {
+		/*
+		 * TODO What if get(word) is null? This throws a null pointer when it shouldnt.
+		 * Use your contains methods to determine if you are returning the collection
+		 * below or Collections.emptySet instead.
+		 */
 		return Collections.unmodifiableSet(index.get(word).keySet());
 	}
 
@@ -138,6 +145,7 @@ public class InvertedIndex {
 	 * @return an unmodifiable set of Positions
 	 */
 	public Set<Integer> getPositions(String word, String location) {
+		// TODO Same problem as above
 		return Collections.unmodifiableSet(index.get(word).get(location));
 
 	}
