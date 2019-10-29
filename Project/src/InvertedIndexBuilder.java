@@ -31,7 +31,7 @@ public class InvertedIndexBuilder {
 			addPath(index, path);
 		} else {
 			for (Path newPath : getTextFiles(path)) {
-				if (isTextFile(newPath)) {
+				if (isTextFile(newPath)) { // TODO Remove this check, getTextFiles should only return text files!
 					addPath(index, newPath);
 				}
 			}
@@ -57,6 +57,7 @@ public class InvertedIndexBuilder {
 	 * @throws IOException
 	 */
 	public static List<Path> getTextFiles(Path path) throws IOException {
+		// TODO Filter this by text files before returning the list.
 		return Files.walk(path, FileVisitOption.FOLLOW_LINKS).collect(Collectors.toList());
 	}
 
