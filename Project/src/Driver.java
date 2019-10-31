@@ -3,6 +3,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collections;
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -60,6 +61,41 @@ public class Driver {
 				SimpleJsonWriter.asObject(index.getCount(), path);
 			} catch (IOException e) {
 				System.out.println("Unable to write the word counts to path: " + path);
+			}
+		}
+		if (parse.hasFlag("-results")) {
+			try {
+				SimpleJsonWriter.asQuery(Collections.emptyMap(), Path.of("results.json"));
+			} catch (IOException e) {
+				System.out.println("Cannot write results");
+			}
+		}
+		if (parse.hasFlag("-query") && parse.getPath("-query") != null) {
+			Path qPath = parse.getPath("-query");
+			try {
+				QueryBuilder qBuilder = new QueryBuilder(index, qPath);
+				qBuilder.makeQuery();
+				if (parse.hasFlag("-exact")) {
+					qBuilder.exactSearch();
+				} else {
+					qBuilder.partialSearch();
+				}
+				if (parse.hasFlag("-results")) {
+					try {
+						Path path = parse.getPath("-results");
+						SimpleJsonWriter.asQuery(qBuilder.getQuerySet(), path);
+					} catch (NullPointerException n) {
+						System.out.println("Cannot write null file");
+					}
+
+				}
+			} catch (IOException e) {
+				System.out.println("Unable to read the query file" + qPath.toString());
+
+			} catch (Exception s) {
+				System.out.println("Unable to do something to the query file" + qPath.toString());
+				s.printStackTrace();
+
 			}
 		}
 		// calculate time elapsed and output

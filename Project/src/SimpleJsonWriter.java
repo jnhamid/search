@@ -5,6 +5,7 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -101,7 +102,7 @@ public class SimpleJsonWriter {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Writes the elements as a nested pretty JSON object. The generic notation used
 	 * allows this method to be used for any type of map with any type of nested
@@ -142,8 +143,8 @@ public class SimpleJsonWriter {
 	 * @param level    the inital indent level
 	 * @throws IOException
 	 */
-	public static void asNestedHelper(Map<String, ? extends Collection<Integer>> elements, String line, Writer writer, int level)
-			throws IOException {
+	public static void asNestedHelper(Map<String, ? extends Collection<Integer>> elements, String line, Writer writer,
+			int level) throws IOException {
 		writer.write("\n");
 		quote(line.toString(), writer, level + 1);
 		writer.write(": [\n");
@@ -197,6 +198,100 @@ public class SimpleJsonWriter {
 	}
 
 	/**
+	 * @param qSet
+	 * @param path
+	 * @param writer
+	 * @param level
+	 * @throws IOException
+	 */
+	public static void asQuery(Map<Query, ArrayList<Result>> qSet, Path path, Writer writer, int level)
+			throws IOException {
+		writer.write("{\n");
+		var iterator = qSet.keySet().iterator();
+
+		if (iterator.hasNext()) {
+			Query query = iterator.next();
+			indent(writer, level + 1);
+			writer.write("\"" + query.toString() + "\": [");
+			indent(writer, level + 1);
+			asQueryHelper(qSet, query, path, writer, level + 1);
+			writer.write("\n\t]");
+
+		}
+
+		while (iterator.hasNext()) {
+			Query query = iterator.next();
+			writer.write(",\n");
+			indent(writer, level + 1);
+			writer.write("\"" + query.toString() + "\": [");
+			indent(writer, level + 1);
+			asQueryHelper(qSet, query, path, writer, level + 1);
+			writer.write("\n\t]");
+		}
+		writer.write("\n}");
+
+	}
+
+	/**
+	 * queryHelper
+	 * 
+	 * @param qSet
+	 * @param nextQuery
+	 * @param path
+	 * @param writer
+	 * @param level
+	 * @throws IOException
+	 */
+	public static void asQueryHelper(Map<Query, ArrayList<Result>> qSet, Query nextQuery, Path path, Writer writer,
+			int level) throws IOException {
+		var innerIterator = qSet.get(nextQuery).iterator();
+
+		if (innerIterator.hasNext()) {
+			writer.write("\n");
+			indent(writer, level + 1);
+			writer.write("\t{\n");
+			indent(writer, level + 3);
+			var nexto = innerIterator.next();
+			writer.write(nexto.getFileNameString() + "\n");
+			indent(writer, level + 3);
+			writer.write(nexto.getCountString() + "\n");
+			indent(writer, level + 3);
+			writer.write(nexto.getScoreString() + "\n");
+			indent(writer, level + 2);
+			writer.write("}");
+			indent(writer, level - 1);
+		}
+		while (innerIterator.hasNext()) {
+			writer.write(",\n");
+			indent(writer, level + 2);
+			writer.write("{\n");
+			indent(writer, level + 3);
+			var nexto = innerIterator.next();
+			writer.write(nexto.getFileNameString() + "\n");
+			indent(writer, level + 3);
+			writer.write(nexto.getCountString() + "\n");
+			indent(writer, level + 3);
+			writer.write(nexto.getScoreString() + "\n");
+			indent(writer, level + 2);
+			writer.write("}");
+			indent(writer, level - 1);
+		}
+	}
+
+	/**
+	 * Overloads asQuery
+	 *
+	 * @param map
+	 * @param path
+	 * @throws IOException
+	 */
+	public static void asQuery(Map<Query, ArrayList<Result>> map, Path path) throws IOException {
+		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+			asQuery(map, path, writer, 0);
+		}
+	}
+
+	/**
 	 * Calls the overloaded asDoubleNested() just taking in the element and the path
 	 * 
 	 * @param elements the Map that is being written to
@@ -217,7 +312,8 @@ public class SimpleJsonWriter {
 	 * @param path     the path that is getting written
 	 * @throws IOException
 	 */
-	public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Path path) throws IOException { 
+	public static void asNestedObject(Map<String, ? extends Collection<Integer>> elements, Path path)
+			throws IOException {
 		// THIS CODE IS PROVIDED FOR YOU; DO NOT MODIFY
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asNestedObject(elements, writer, 0);

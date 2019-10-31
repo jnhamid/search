@@ -45,6 +45,76 @@ public class InvertedIndex {
 	}
 
 	/**
+	 * @param word
+	 * @return makes results
+	 */
+	public ArrayList<Result> makeResult(String word) {
+		ArrayList<Result> results = new ArrayList<>();
+
+		if (this.contains(word)) {
+			var files = this.index.get(word).keySet();
+			for (String file : files) {
+				Result result = new Result();
+				result.setFileName(file);
+				result.setCount(this.index.get(word).get(file).size());
+				result.setScore((double) result.getCount() / count.get(file));
+
+				results.add(result);
+			}
+		}
+		return results;
+	}
+
+	/**
+	 * Given a TreeSet of results will merge duplicates by file.
+	 *
+	 * @param results
+	 * @return a merged TreeSet of Results.
+	 */
+	public static ArrayList<Result> mergeDuplicates(ArrayList<Result> results) {
+		ArrayList<Result> merged = new ArrayList<>();
+
+		for (Result result : results) {
+			boolean mergeHappened = false;
+			for (Result mergedResult : merged) {
+				if (mergedResult.sameFileName(result)) {
+					mergedResult.setScore(mergedResult.getScore() + result.getScore());
+					mergedResult.setCount(mergedResult.getCount() + result.getCount());
+					mergeHappened = true;
+				}
+			}
+			if (!mergeHappened) {
+				merged.add(result);
+			}
+		}
+		return merged;
+	}
+
+	/**
+	 * Returns TreeSet of Results given a query.
+	 *
+	 * @param query Current query.
+	 * @return A set of Results associated to a query.
+	 */
+	public ArrayList<Result> getResults(Query query) {
+		ArrayList<Result> results = new ArrayList<>();
+
+		for (String word : query.getWords()) {
+
+			ArrayList<Result> r = makeResult(word);
+
+			for (Result q : r) {
+				results.add(q);
+			}
+
+		}
+
+		results = mergeDuplicates(results);
+		Collections.sort(results);
+		return results;
+	}
+
+	/**
 	 * will output to file using method in SimpleJsonWriter
 	 * 
 	 * @param outFile file name of file that is getting written
