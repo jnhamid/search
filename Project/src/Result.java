@@ -59,14 +59,16 @@ public class Result implements Comparable<Result> {
 	}
 
 	/**
-	 * @param other
-	 * @return if
+	 * a helper method for creating results
+	 * @param other 
+	 * @return true if file name is the same
 	 */
 	public boolean sameFileName(Result other) {
 		return this.fileName.compareTo(other.fileName) == 0;
 	}
 
 	/**
+	 * getting for score
 	 * @return score
 	 */
 	public double getScore() {
@@ -74,6 +76,7 @@ public class Result implements Comparable<Result> {
 	}
 
 	/**
+	 * setter for score
 	 * @param score
 	 */
 	public void setScore(double score) {
@@ -81,6 +84,7 @@ public class Result implements Comparable<Result> {
 	}
 
 	/**
+	 * getter for count
 	 * @return count
 	 */
 	public int getCount() {
@@ -88,6 +92,7 @@ public class Result implements Comparable<Result> {
 	}
 
 	/**
+	 * setter for count
 	 * @param count
 	 */
 	public void setCount(int count) {
@@ -95,6 +100,7 @@ public class Result implements Comparable<Result> {
 	}
 
 	/**
+	 * getter for fileName
 	 * @return fileName
 	 */
 	public String getFileName() {
@@ -102,6 +108,7 @@ public class Result implements Comparable<Result> {
 	}
 
 	/**
+	 * setter for fileName
 	 * @param fileName
 	 */
 	public void setFileName(String fileName) {
@@ -109,6 +116,7 @@ public class Result implements Comparable<Result> {
 	}
 
 	/**
+	 * pretty string for fileName
 	 * @return String for writing
 	 */
 	public String getFileNameString() {
@@ -116,6 +124,7 @@ public class Result implements Comparable<Result> {
 	}
 
 	/**
+	 * pretty string for count
 	 * @return String for writing
 	 */
 	public String getCountString() {
@@ -123,6 +132,7 @@ public class Result implements Comparable<Result> {
 	}
 
 	/**
+	 * pretty string for score
 	 * @return String for writing
 	 */
 	public String getScoreString() {

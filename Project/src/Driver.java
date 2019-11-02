@@ -21,13 +21,15 @@ public class Driver {
 	 * inverted index.
 	 *
 	 * @param args flag/value pairs used to start this program
+	 * @throws IOException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		InvertedIndex index = new InvertedIndex();
 		// store initial start time
 		Instant start = Instant.now();
 
 		ArgumentParser parse = new ArgumentParser(args);
+		QueryBuilder qBuilder = new QueryBuilder(index);
 		/*
 		 * This if builds the InvertedIndex if has the flag "-path"
 		 */
@@ -63,31 +65,17 @@ public class Driver {
 				System.out.println("Unable to write the word counts to path: " + path);
 			}
 		}
-		if (parse.hasFlag("-results")) {
-			try {
-				SimpleJsonWriter.asQuery(Collections.emptyMap(), Path.of("results.json"));
-			} catch (IOException e) {
-				System.out.println("Cannot write results");
-			}
-		}
+		/*
+		 * This if writes the output file to the path with flag "-query"
+		 */
 		if (parse.hasFlag("-query") && parse.getPath("-query") != null) {
 			Path qPath = parse.getPath("-query");
 			try {
-				QueryBuilder qBuilder = new QueryBuilder(index, qPath);
-				qBuilder.makeQuery();
+				qBuilder.makeQuery(qPath);
 				if (parse.hasFlag("-exact")) {
 					qBuilder.exactSearch();
 				} else {
 					qBuilder.partialSearch();
-				}
-				if (parse.hasFlag("-results")) {
-					try {
-						Path path = parse.getPath("-results");
-						SimpleJsonWriter.asQuery(qBuilder.getQuerySet(), path);
-					} catch (NullPointerException n) {
-						System.out.println("Cannot write null file");
-					}
-
 				}
 			} catch (IOException e) {
 				System.out.println("Unable to read the query file" + qPath.toString());
@@ -97,6 +85,21 @@ public class Driver {
 				s.printStackTrace();
 
 			}
+		}
+		/*
+		 * This if writes the output file to the path with flag "-results"
+		 */
+		if (parse.hasFlag("-results")) {
+			Path path = parse.getPath("-results", Path.of("resutls.json"));
+			try {
+				SimpleJsonWriter.asQuery(Collections.emptyMap(), Path.of("results.json"));
+				SimpleJsonWriter.asQuery(qBuilder.getQuerySet(), path);
+			} catch (NullPointerException n) {
+				System.out.println("Cannot write null file");
+			} catch (IOException e) {
+				System.out.println("Cannot write results");
+			}
+
 		}
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now());

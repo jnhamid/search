@@ -26,10 +26,6 @@ public class QueryBuilder {
 	 */
 	private TreeMap<Query, ArrayList<Result>> qSet;
 
-	/**
-	 * qPath
-	 */
-	private final Path qPath;
 
 	/**
 	 * Snowball Stemmer
@@ -38,12 +34,10 @@ public class QueryBuilder {
 
 	/**
 	 * @param index
-	 * @param qPath
 	 * @throws IOException
 	 */
-	public QueryBuilder(InvertedIndex index, Path qPath) throws IOException {
+	public QueryBuilder(InvertedIndex index) throws IOException {
 		this.index = index;
-		this.qPath = qPath;
 		this.qSet = new TreeMap<>();
 	}
 
@@ -57,12 +51,13 @@ public class QueryBuilder {
 
 	/**
 	 * makes the Queries
+	 * @param qPath 
 	 * 
 	 * @throws IOException
 	 */
-	public void makeQuery() throws IOException {
+	public void makeQuery(Path qPath) throws IOException {
 		Stemmer stemmer = new SnowballStemmer(DEFAULT);
-		try (BufferedReader reader = Files.newBufferedReader(this.qPath, StandardCharsets.UTF_8);) {
+		try (BufferedReader reader = Files.newBufferedReader(qPath, StandardCharsets.UTF_8);) {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				Query query = new Query();

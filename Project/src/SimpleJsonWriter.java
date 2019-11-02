@@ -198,10 +198,12 @@ public class SimpleJsonWriter {
 	}
 
 	/**
-	 * @param qSet
-	 * @param path
-	 * @param writer
-	 * @param level
+	 * Writer for Query Object
+	 * 
+	 * @param qSet   Map of Query and results
+	 * @param path   the Path to be written to
+	 * @param writer the writer
+	 * @param level  the intial indent level
 	 * @throws IOException
 	 */
 	public static void asQuery(Map<Query, ArrayList<Result>> qSet, Path path, Writer writer, int level)
@@ -233,13 +235,13 @@ public class SimpleJsonWriter {
 	}
 
 	/**
-	 * queryHelper
+	 * a helper method for asQuery
 	 * 
-	 * @param qSet
-	 * @param nextQuery
-	 * @param path
-	 * @param writer
-	 * @param level
+	 * @param qSet      Map of Query and results
+	 * @param nextQuery the next query entry
+	 * @param path      the Path to be written to
+	 * @param writer    the writer
+	 * @param level     the intial indent level
 	 * @throws IOException
 	 */
 	public static void asQueryHelper(Map<Query, ArrayList<Result>> qSet, Query nextQuery, Path path, Writer writer,
@@ -281,8 +283,8 @@ public class SimpleJsonWriter {
 	/**
 	 * Overloads asQuery
 	 *
-	 * @param map
-	 * @param path
+	 * @param map  map of query
+	 * @param path path being written to
 	 * @throws IOException
 	 */
 	public static void asQuery(Map<Query, ArrayList<Result>> map, Path path) throws IOException {
