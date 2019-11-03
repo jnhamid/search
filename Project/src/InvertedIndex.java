@@ -45,8 +45,9 @@ public class InvertedIndex {
 	}
 
 	/**
-	 * @param word
-	 * @return makes results
+	 * This function will make the result entry 
+	 * @param word word being searched in index
+	 * @return an arraylist of results
 	 */
 	public ArrayList<Result> makeResult(String word) {
 		ArrayList<Result> results = new ArrayList<>();
@@ -68,7 +69,7 @@ public class InvertedIndex {
 	/**
 	 * Given a TreeSet of results will merge duplicates by file.
 	 *
-	 * @param results
+	 * @param results arraylist that has duplicates
 	 * @return a merged TreeSet of Results.
 	 */
 	public static ArrayList<Result> mergeDuplicates(ArrayList<Result> results) {
@@ -96,10 +97,10 @@ public class InvertedIndex {
 	 * @param query Current query.
 	 * @return A set of Results associated to a query.
 	 */
-	public ArrayList<Result> getResults(Query query) {
+	public ArrayList<Result> getResults(String query) {
 		ArrayList<Result> results = new ArrayList<>();
 
-		for (String word : query.getWords()) {
+		for (String word : query.split(" ")) {
 
 			ArrayList<Result> r = makeResult(word);
 

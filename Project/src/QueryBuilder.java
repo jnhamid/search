@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
-import opennlp.tools.stemmer.Stemmer;
+import java.util.TreeSet;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
@@ -24,8 +24,7 @@ public class QueryBuilder {
 	/**
 	 * qSet
 	 */
-	private TreeMap<Query, ArrayList<Result>> qSet;
-
+	private TreeMap<String, ArrayList<Result>> qSet;
 
 	/**
 	 * Snowball Stemmer
@@ -33,7 +32,8 @@ public class QueryBuilder {
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 
 	/**
-	 * @param index
+	 * Constructor
+	 * @param index InvertedIndex that the queries are being built on
 	 * @throws IOException
 	 */
 	public QueryBuilder(InvertedIndex index) throws IOException {
@@ -42,33 +42,29 @@ public class QueryBuilder {
 	}
 
 	/**
-	 * @return this.qSet
+	 * getter for qset
+	 * @return an unmodifiable map of this.qSet
 	 */
-	public Map<Query, ArrayList<Result>> qSet() {
+	public Map<String, ArrayList<Result>> qSet() {
 		return Collections.unmodifiableMap(this.qSet);
 
 	}
 
 	/**
 	 * makes the Queries
-	 * @param qPath 
+	 * 
+	 * @param qPath path of query
 	 * 
 	 * @throws IOException
 	 */
 	public void makeQuery(Path qPath) throws IOException {
-		Stemmer stemmer = new SnowballStemmer(DEFAULT);
 		try (BufferedReader reader = Files.newBufferedReader(qPath, StandardCharsets.UTF_8);) {
 			String line;
 			while ((line = reader.readLine()) != null) {
-				Query query = new Query();
-				String[] parsedLine = TextParser.parse(line);
-				for (String words : parsedLine) {
-					String stemmed = stemmer.stem(words).toString();
-					query.add(stemmed);
-
-				}
-				if (query.size() != 0) {
-					this.qSet.put(query, null);
+				TreeSet<String> query = TextFileStemmer.uniqueStems(line);
+				String joined = String.join(" ", query);
+				if (query.size() != 0 && !qSet.containsKey(joined)) {
+					this.qSet.put(joined, null);
 				}
 
 			}
@@ -76,18 +72,19 @@ public class QueryBuilder {
 	}
 
 	/**
-	 * This function will trigger an exact search on the queries.
+	 * This function will do an exact search on the queries.
 	 */
 	public void exactSearch() {
-		for (Query query : this.qSet.keySet()) {
+		for (String query : this.qSet.keySet()) {
 			this.qSet.put(query, this.index.getResults(query));
 		}
+
 	}
-	
+
 	/**
-	 * @return map
+	 * @return an unmodifiableMap of ArrayList
 	 */
-	public Map<Query, ArrayList<Result>> getQuerySet(){
+	public Map<String, ArrayList<Result>> getQuerySet() {
 		return Collections.unmodifiableMap(qSet);
 	}
 
@@ -95,9 +92,9 @@ public class QueryBuilder {
 	 * This function does Partial search.
 	 */
 	public void partialSearch() {
-		for (Query query : this.qSet.keySet()) {
+		for (String query : this.qSet.keySet()) {
 			ArrayList<Result> results = new ArrayList<>();
-			for (String queryWord : query.getWords()) {
+			for (String queryWord : query.split(" ")) {
 				for (String indexWord : index.getWords()) {
 					if (indexWord.startsWith(queryWord) || indexWord.equals(queryWord)) {
 						results.addAll(this.index.makeResult(indexWord));
