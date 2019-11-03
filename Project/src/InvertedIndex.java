@@ -96,10 +96,10 @@ public class InvertedIndex {
 	 * @param query Current query.
 	 * @return A set of Results associated to a query.
 	 */
-	public ArrayList<Result> getResults(Query query) {
+	public ArrayList<Result> getResults(String query) {
 		ArrayList<Result> results = new ArrayList<>();
 
-		for (String word : query.getWords()) {
+		for (String word : query.split(" ")) {
 
 			ArrayList<Result> r = makeResult(word);
 
