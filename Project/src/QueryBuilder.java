@@ -26,14 +26,14 @@ public class QueryBuilder {
 	 */
 	private TreeMap<String, ArrayList<Result>> qSet;
 
-
 	/**
 	 * Snowball Stemmer
 	 */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 
 	/**
-	 * @param index
+	 * Constructor
+	 * @param index InvertedIndex that the queries are being built on
 	 * @throws IOException
 	 */
 	public QueryBuilder(InvertedIndex index) throws IOException {
@@ -42,7 +42,8 @@ public class QueryBuilder {
 	}
 
 	/**
-	 * @return this.qSet
+	 * getter for qset
+	 * @return an unmodifiable map of this.qSet
 	 */
 	public Map<String, ArrayList<Result>> qSet() {
 		return Collections.unmodifiableMap(this.qSet);
@@ -51,7 +52,8 @@ public class QueryBuilder {
 
 	/**
 	 * makes the Queries
-	 * @param qPath 
+	 * 
+	 * @param qPath path of query
 	 * 
 	 * @throws IOException
 	 */
@@ -61,8 +63,7 @@ public class QueryBuilder {
 			while ((line = reader.readLine()) != null) {
 				TreeSet<String> query = TextFileStemmer.uniqueStems(line);
 				String joined = String.join(" ", query);
-				//System.out.println(joined);
-				if(query.size() != 0 && !qSet.containsKey(joined)){
+				if (query.size() != 0 && !qSet.containsKey(joined)) {
 					this.qSet.put(joined, null);
 				}
 
@@ -71,34 +72,19 @@ public class QueryBuilder {
 	}
 
 	/**
-	 * This function will trigger an exact search on the queries.
-	 * @return an arraylist of SearchResults
+	 * This function will do an exact search on the queries.
 	 */
-	public ArrayList<Result> exactSearch() {
-		ArrayList<Result> results = new ArrayList<>();
-		for(String query: this.qSet.keySet()) {
-			if(this.index.contains(query)) {
-				for(String fileName : this.index.getLocations(query)){
-					System.out.println(fileName);
-					results.addAll(this.index.getResults(fileName));
-					System.out.println(results.toString());
-	
-				}
-			}
-			Collections.sort(results);
-			//System.out.println("query: " + query + " result: " + results.toString());
-			
-			this.qSet.put(query, results);
+	public void exactSearch() {
+		for (String query : this.qSet.keySet()) {
+			this.qSet.put(query, this.index.getResults(query));
 		}
-		results = InvertedIndex.mergeDuplicates(results);
-		Collections.sort(results);
-		return results;
+
 	}
-	
+
 	/**
-	 * @return map
+	 * @return an unmodifiableMap of ArrayList
 	 */
-	public Map<String, ArrayList<Result>> getQuerySet(){
+	public Map<String, ArrayList<Result>> getQuerySet() {
 		return Collections.unmodifiableMap(qSet);
 	}
 
