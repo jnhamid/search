@@ -43,6 +43,41 @@ public class InvertedIndex {
 		}
 
 	}
+	
+	/* TODO
+	public ArrayList<Result> search(Collection<String> queries, boolean exact) {
+		return exact ? exactSearch(queries) : partialSearch(queries);
+	}
+	
+	public ArrayList<Result> exactSearch(Collection<String> queries) {
+		list of results
+		lookup map that maps a location (string) to a result object
+		
+		for each query
+			if the query is a key in our index
+				for each location
+					if this location is a key in our lookup map
+						lookup.get(location).update(word)
+					else
+						create a new result
+						add the result to the list
+						add the result to the lookup map too
+		
+		collections.sort
+		return
+	}
+	
+	public ArrayList<Result> partialSearch(Collection<String> queries) {
+		
+		
+		instead of looping through all the keys in the index ot see if they
+		start with our query
+		
+		note that the keys are sorted
+		see: https://github.com/usf-cs212-fall2019/lectures/blob/master/Data%20Structures/src/FindDemo.java#L146-L163
+	}
+	*/
+	
 
 	/**
 	 * This function will make the result entry 
