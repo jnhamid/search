@@ -33,6 +33,7 @@ public class QueryBuilder {
 
 	/**
 	 * Constructor
+	 * 
 	 * @param index InvertedIndex that the queries are being built on
 	 * @throws IOException
 	 */
@@ -43,6 +44,7 @@ public class QueryBuilder {
 
 	/**
 	 * getter for qset
+	 * 
 	 * @return an unmodifiable map of this.qSet
 	 */
 	public Map<String, ArrayList<Result>> qSet() {
