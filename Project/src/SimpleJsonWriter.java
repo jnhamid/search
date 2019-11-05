@@ -200,23 +200,23 @@ public class SimpleJsonWriter {
 	/**
 	 * Writer for Query Object
 	 * 
-	 * @param qSet   Map of Query and results
-	 * @param path   the Path to be written to
-	 * @param writer the writer
-	 * @param level  the intial indent level
+	 * @param querySet Map of Query and results
+	 * @param path     the Path to be written to
+	 * @param writer   the writer
+	 * @param level    the intial indent level
 	 * @throws IOException
 	 */
-	public static void asQuery(Map<String, ArrayList<Result>> qSet, Path path, Writer writer, int level)
-			throws IOException {
+	public static void asQuery(Map<String, ArrayList<InvertedIndex.Result>> querySet, Path path, Writer writer,
+			int level) throws IOException {
 		writer.write("{\n");
-		var iterator = qSet.keySet().iterator();
+		var iterator = querySet.keySet().iterator();
 
 		if (iterator.hasNext()) {
 			String query = iterator.next();
 			indent(writer, level + 1);
 			writer.write("\"" + query.toString() + "\": [");
 			indent(writer, level + 1);
-			asQueryHelper(qSet, query, path, writer, level + 1);
+			asQueryHelper(querySet, query, path, writer, level + 1);
 			writer.write("\n\t]");
 
 		}
@@ -227,7 +227,7 @@ public class SimpleJsonWriter {
 			indent(writer, level + 1);
 			writer.write("\"" + query.toString() + "\": [");
 			indent(writer, level + 1);
-			asQueryHelper(qSet, query, path, writer, level + 1);
+			asQueryHelper(querySet, query, path, writer, level + 1);
 			writer.write("\n\t]");
 		}
 		writer.write("\n}");
@@ -237,16 +237,16 @@ public class SimpleJsonWriter {
 	/**
 	 * a helper method for asQuery
 	 * 
-	 * @param qSet      Map of Query and results
+	 * @param querySet  Map of Query and results
 	 * @param nextQuery the next query entry
 	 * @param path      the Path to be written to
 	 * @param writer    the writer
 	 * @param level     the intial indent level
 	 * @throws IOException
 	 */
-	public static void asQueryHelper(Map<String, ArrayList<Result>> qSet, String nextQuery, Path path, Writer writer,
-			int level) throws IOException {
-		var innerIterator = qSet.get(nextQuery).iterator();
+	public static void asQueryHelper(Map<String, ArrayList<InvertedIndex.Result>> querySet, String nextQuery, Path path,
+			Writer writer, int level) throws IOException {
+		var innerIterator = querySet.get(nextQuery).iterator();
 
 		if (innerIterator.hasNext()) {
 			writer.write("\n");
@@ -287,7 +287,7 @@ public class SimpleJsonWriter {
 	 * @param path path being written to
 	 * @throws IOException
 	 */
-	public static void asQuery(Map<String, ArrayList<Result>> map, Path path) throws IOException {
+	public static void asQuery(Map<String, ArrayList<InvertedIndex.Result>> map, Path path) throws IOException {
 		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
 			asQuery(map, path, writer, 0);
 		}

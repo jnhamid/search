@@ -14,14 +14,165 @@ public class InvertedIndex {
 	/**
 	 * Private Identifier for count data structure
 	 */
-	private final TreeMap<String, Integer> count;
+	private final TreeMap<String, Integer> counts;
 
 	/**
 	 * Initialize maps
 	 */
 	public InvertedIndex() {
 		index = new TreeMap<>();
-		count = new TreeMap<>();
+		counts = new TreeMap<>();
+	}
+
+	/**
+	 * An innerclass of results for the queries and words in index
+	 * 
+	 * @author Jaden
+	 *
+	 */
+	public class Result implements Comparable<Result> {
+
+		/**
+		 * name of file
+		 */
+		private final String fileName;
+
+		/**
+		 * count
+		 */
+		private int count;
+
+		/**
+		 * score
+		 */
+		private double score;
+
+		/**
+		 * constructor
+		 * 
+		 * @param fileName The location of Result
+		 */
+		public Result(String fileName) {
+			this.score = 0;
+			this.count = 0;
+			this.fileName = fileName;
+
+		}
+
+		/**
+		 * Better Constructor
+		 * 
+		 * @param fileName
+		 * @param count
+		 * @param score
+		 */
+		public Result(String fileName, int count, double score) {
+			this.score = score;
+			this.count = count;
+			this.fileName = fileName;
+		}
+
+		/*
+		 * Overridden compareTo
+		 * 
+		 * @param o other result that is comparing
+		 */
+		@Override
+		public int compareTo(Result o) {
+			double scoreDifference = this.score - o.score;
+			int countDifference = this.count - o.count;
+			if (scoreDifference != 0) {
+				return scoreDifference > 0 ? -1 : 1;
+			} else if (countDifference != 0) {
+				return countDifference > 0 ? -1 : 1;
+
+			} else {
+				return (this.fileName.toLowerCase().compareTo(o.fileName.toLowerCase()));
+			}
+
+		}
+
+		/**
+		 * a helper method for creating results
+		 * 
+		 * @param other the other result to check if two files have the same name
+		 * @return true if file name is the same
+		 */
+		public boolean sameFileName(Result other) {
+			return this.fileName.compareTo(other.fileName) == 0;
+		}
+
+		/**
+		 * getting for score
+		 * 
+		 * @return score
+		 */
+		public double getScore() {
+			return score;
+		}
+
+		/**
+		 * getter for count
+		 * 
+		 * @return count
+		 */
+		public int getCount() {
+			return this.count;
+		}
+
+		/**
+		 * setter for count
+		 * 
+		 * @param word the word to be updated
+		 */
+		public void update(String word) {
+			this.count += index.get(word).get(fileName).size();
+			this.score = (double) this.count / counts.get(this.fileName);
+		}
+
+		/**
+		 * getter for fileName
+		 * 
+		 * @return fileName
+		 */
+		public String getFileName() {
+			return fileName;
+		}
+
+		/**
+		 * pretty string for fileName
+		 * 
+		 * @return String for writing
+		 */
+		public String getFileNameString() {
+			return ("\"where\": " + "\"" + this.fileName + "\",");
+		}
+
+		/**
+		 * pretty string for count
+		 * 
+		 * @return String for writing
+		 */
+		public String getCountString() {
+			return ("\"count\": " + this.count + ",");
+		}
+
+		/**
+		 * pretty string for score
+		 * 
+		 * @return String for writing
+		 */
+		public String getScoreString() {
+			return ("\"score\": " + String.format("%.8f", this.score));
+		}
+
+		/*
+		 * overridden toString
+		 */
+		@Override
+		public String toString() {
+			return "[" + getFileName() + ", " + getCountString() + ", " + getScoreString() + "]\n";
+		}
 	}
 
 	/**
@@ -37,50 +188,92 @@ public class InvertedIndex {
 		index.putIfAbsent(word, new TreeMap<String, TreeSet<Integer>>());
 		index.get(word).putIfAbsent(file, new TreeSet<Integer>());
 		index.get(word).get(file).add(pos);
-		count.putIfAbsent(file, pos);
-		if (pos > count.get(file)) {
-			count.put(file, pos);
+		counts.putIfAbsent(file, pos);
+		if (pos > counts.get(file)) {
+			counts.put(file, pos);
 		}
 
 	}
-	
-	/* TODO
+
+	/**
+	 * A method that calls exactSearch or paritalSearch
+	 * 
+	 * @param queries the queries being searched
+	 * @param exact   whether exactsearch or not
+	 * @return an arraylist of search results
+	 */
 	public ArrayList<Result> search(Collection<String> queries, boolean exact) {
 		return exact ? exactSearch(queries) : partialSearch(queries);
 	}
-	
-	public ArrayList<Result> exactSearch(Collection<String> queries) {
-		list of results
-		lookup map that maps a location (string) to a result object
-		
-		for each query
-			if the query is a key in our index
-				for each location
-					if this location is a key in our lookup map
-						lookup.get(location).update(word)
-					else
-						create a new result
-						add the result to the list
-						add the result to the lookup map too
-		
-		collections.sort
-		return
-	}
-	
-	public ArrayList<Result> partialSearch(Collection<String> queries) {
-		
-		
-		instead of looping through all the keys in the index ot see if they
-		start with our query
-		
-		note that the keys are sorted
-		see: https://github.com/usf-cs212-fall2019/lectures/blob/master/Data%20Structures/src/FindDemo.java#L146-L163
-	}
-	*/
-	
 
 	/**
-	 * This function will make the result entry 
+	 * Does exactSearch of a Collection of quieries
+	 * 
+	 * @param queries the queries being searched
+	 * @return an arraylist of results
+	 */
+	public ArrayList<Result> exactSearch(Collection<String> queries) {
+		ArrayList<Result> results = new ArrayList<>();
+		HashMap<String, Result> lookup = new HashMap<>();
+
+		for (String query : queries) {
+			if (index.containsKey(query)) {
+				searchHelper(results, query, lookup);
+			}
+		}
+		Collections.sort(results);
+		return results;
+	}
+
+	/**
+	 * Does partialSearch of a Collection of quieries
+	 * 
+	 * @param queries the queries being searched
+	 * @return an arraylist of results
+	 */
+	public ArrayList<Result> partialSearch(Collection<String> queries) {
+		ArrayList<Result> results = new ArrayList<>();
+		HashMap<String, Result> lookup = new HashMap<>();
+
+		for (String query : queries) {
+			for (String word : this.index.tailMap(query).keySet()) {
+				if (word.startsWith(query)) {
+					searchHelper(results, word, lookup);
+				} else {
+					break;
+				}
+			}
+		}
+		Collections.sort(results);
+		return results;
+
+	}
+
+	/**
+	 * A helper for search
+	 * 
+	 * @param results the Arraylist of results
+	 * @param word    the word being searched
+	 * @param lookup  lookup checker for duplicates
+	 */
+	public void searchHelper(ArrayList<Result> results, String word, Map<String, Result> lookup) {
+		for (String fileName : this.index.get(word).keySet()) {
+			if (lookup.containsKey(fileName)) {
+				lookup.get(fileName).update(word);
+			} else {
+				Result result = new Result(fileName);
+				result.update(word);
+				lookup.put(fileName, result);
+				results.add(result);
+
+			}
+		}
+
+	}
+
+	/**
+	 * This function will make the result entry
+	 * 
 	 * @param word word being searched in index
 	 * @return an arraylist of results
 	 */
@@ -90,63 +283,12 @@ public class InvertedIndex {
 		if (this.contains(word)) {
 			var files = this.index.get(word).keySet();
 			for (String file : files) {
-				Result result = new Result();
-				result.setFileName(file);
-				result.setCount(this.index.get(word).get(file).size());
-				result.setScore((double) result.getCount() / count.get(file));
+				Result result = new Result(file);
+				result.update(word);
 
 				results.add(result);
 			}
 		}
-		return results;
-	}
-
-	/**
-	 * Given a TreeSet of results will merge duplicates by file.
-	 *
-	 * @param results arraylist that has duplicates
-	 * @return a merged TreeSet of Results.
-	 */
-	public static ArrayList<Result> mergeDuplicates(ArrayList<Result> results) {
-		ArrayList<Result> merged = new ArrayList<>();
-
-		for (Result result : results) {
-			boolean mergeHappened = false;
-			for (Result mergedResult : merged) {
-				if (mergedResult.sameFileName(result)) {
-					mergedResult.setScore(mergedResult.getScore() + result.getScore());
-					mergedResult.setCount(mergedResult.getCount() + result.getCount());
-					mergeHappened = true;
-				}
-			}
-			if (!mergeHappened) {
-				merged.add(result);
-			}
-		}
-		return merged;
-	}
-
-	/**
-	 * Returns TreeSet of Results given a query.
-	 *
-	 * @param query Current query.
-	 * @return A set of Results associated to a query.
-	 */
-	public ArrayList<Result> getResults(String query) {
-		ArrayList<Result> results = new ArrayList<>();
-
-		for (String word : query.split(" ")) {
-
-			ArrayList<Result> r = makeResult(word);
-
-			for (Result q : r) {
-				results.add(q);
-			}
-
-		}
-
-		results = mergeDuplicates(results);
-		Collections.sort(results);
 		return results;
 	}
 
@@ -166,7 +308,7 @@ public class InvertedIndex {
 	 * @return count as a unmodifiableMap
 	 */
 	public Map<String, Integer> getCount() {
-		return Collections.unmodifiableMap(count);
+		return Collections.unmodifiableMap(counts);
 	}
 
 	/**

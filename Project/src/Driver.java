@@ -71,12 +71,7 @@ public class Driver {
 		if (parse.hasFlag("-query") && parse.getPath("-query") != null) {
 			Path qPath = parse.getPath("-query");
 			try {
-				qBuilder.makeQuery(qPath);
-				if (parse.hasFlag("-exact")) {
-					qBuilder.exactSearch();
-				} else {
-					qBuilder.partialSearch();
-				}
+				qBuilder.makeQuery(qPath, parse.hasFlag("-exact"));
 			} catch (IOException e) {
 				System.out.println("Unable to read the query file" + qPath.toString());
 
@@ -93,7 +88,7 @@ public class Driver {
 			Path path = parse.getPath("-results", Path.of("resutls.json"));
 			try {
 				SimpleJsonWriter.asQuery(Collections.emptyMap(), Path.of("results.json"));
-				SimpleJsonWriter.asQuery(qBuilder.getQuerySet(), path);
+				qBuilder.write(path);
 			} catch (NullPointerException n) {
 				System.out.println("Cannot write null file");
 			} catch (IOException e) {

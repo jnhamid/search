@@ -20,7 +20,7 @@ public class ArgumentParser {
 	 * Initializes this argument map.
 	 */
 	public ArgumentParser() {
-		this.map = new HashMap<>();
+		map = new HashMap<>();
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class ArgumentParser {
 	 * @return {@code true} if the flag exists
 	 */
 	public boolean hasFlag(String flag) {
-		return map.containsKey(flag);
+		return this.map.containsKey(flag);
 	}
 
 	/**
