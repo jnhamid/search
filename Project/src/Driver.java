@@ -31,22 +31,6 @@ public class Driver {
 
 		ArgumentParser parse = new ArgumentParser(args);
 		QueryBuilder qBuilder = new QueryBuilder(index);
-		/*
-		 * This if builds the InvertedIndex if has the flag "-path"
-		 */
-		if (parse.hasFlag("-threads")) {
-			int numThreads;
-
-			try {
-				numThreads = Integer.parseInt(parse.getString("-threads"));
-			} catch (Exception e) {
-				numThreads = 5;
-			}
-			index = new ThreadSafeInvertedIndex(numThreads);
-			indexBuilder = new ThreadSafeInvertedIndexBuilder((ThreadSafeInvertedIndex) index);
-			qBuilder = new ThreadSafeQueryBuilder((ThreadSafeInvertedIndex) index);
-		}
-
 		if (parse.hasFlag("-path") && parse.getPath("-path") != null) {
 			Path path = parse.getPath("-path");
 			try {
