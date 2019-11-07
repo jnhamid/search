@@ -27,10 +27,13 @@ public class Driver {
 		InvertedIndex index = new InvertedIndex();
 		// store initial start time
 		Instant start = Instant.now();
-		InvertedIndexBuilder indexBuilder = new InvertedIndexBuilder(index);
 
 		ArgumentParser parse = new ArgumentParser(args);
+		InvertedIndexBuilder indexBuilder = new InvertedIndexBuilder(index);
 		QueryBuilder qBuilder = new QueryBuilder(index);
+		/*
+		 * This if builds the InvertedIndex if has the flag "-path"
+		 */
 		if (parse.hasFlag("-path") && parse.getPath("-path") != null) {
 			Path path = parse.getPath("-path");
 			try {
