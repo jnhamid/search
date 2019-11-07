@@ -15,23 +15,34 @@ import opennlp.tools.stemmer.snowball.SnowballStemmer;
 public class InvertedIndexBuilder {
 
 	/**
+	 * The Inverted Index to populate
+	 */
+	private final InvertedIndex index;
+
+	/**
 	 * Snowball Stemmer
 	 */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
+	
+	/**
+	 * @param index Inverted Index structure that will be built.
+	 */
+	public InvertedIndexBuilder(InvertedIndex index) {
+		this.index = index;
+	}
 
 	/**
 	 * Will build index by traversing files
 	 * 
-	 * @param index The InvertedIndex that is getting built
 	 * @param path  The Path that is getting checked
 	 * @throws IOException
 	 */
-	public static void build(InvertedIndex index, Path path) throws IOException {
+	public void build(Path path) throws IOException {
 		if (Files.isRegularFile(path)) {
-			addPath(index, path);
+			addPath(this.index, path);
 		} else {
 			for (Path newPath : getTextFiles(path)) {
-				addPath(index, newPath);
+				addPath(this.index, newPath);
 			}
 		}
 	}
