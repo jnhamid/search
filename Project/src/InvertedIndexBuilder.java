@@ -35,9 +35,10 @@ public class InvertedIndexBuilder {
 	 * Will build index by traversing files
 	 * 
 	 * @param path  The Path that is getting checked
+	 * @param numThreads number of threads for multithreading
 	 * @throws IOException
 	 */
-	public void build(Path path) throws IOException {
+	public void build(Path path, int numThreads) throws IOException {
 		if (Files.isRegularFile(path)) {
 			addPath(this.index, path);
 		} else {

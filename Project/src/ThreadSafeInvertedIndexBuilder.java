@@ -28,12 +28,17 @@ public class ThreadSafeInvertedIndexBuilder extends InvertedIndexBuilder {
 	 * @throws IOException
 	 */
 	@Override
-	public void build(Path path) throws IOException {
-		WorkQueue queue = new WorkQueue(this.index.numThreads);
+	public void build(Path path, int numThreads) throws IOException {
+		WorkQueue queue = new WorkQueue(numThreads);
 		for (Path currentPath : getTextFiles(path)) {
 			if (isTextFile(currentPath)) {
 				queue.execute(new Task(currentPath, this.index));
 			}
+		}
+		try {
+			queue.finish();
+		} catch (Exception e) {
+			System.out.println("The work queue encountered an error.");
 		}
 		queue.shutdown();
 	}
