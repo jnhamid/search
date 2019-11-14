@@ -10,7 +10,9 @@ import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
- * @author Jaden This is a Builder class for our InvertedIndex class.
+ * This is a Builder class for our InvertedIndex class.
+ * 
+ * @author Jaden 
  */
 public class InvertedIndexBuilder {
 
@@ -25,6 +27,8 @@ public class InvertedIndexBuilder {
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
 	
 	/**
+	 * TODO 
+	 * 
 	 * @param index Inverted Index structure that will be built.
 	 */
 	public InvertedIndexBuilder(InvertedIndex index) {
@@ -46,6 +50,22 @@ public class InvertedIndexBuilder {
 			}
 		}
 	}
+	
+	/* TODO
+	public void build(Path path) throws IOException {
+		if (Files.isRegularFile(path)) {
+			addPath(path);
+		} else {
+			for (Path newPath : getTextFiles(path)) {
+				addPath(newPath);
+			}
+		}
+	}	
+	
+	public void addPath(Path path) throws IOException {
+		addPath(this.index, path);
+	}
+	*/
 
 	/**
 	 * Checks to see if path is a text file and not a directory or some trash file

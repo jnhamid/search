@@ -12,8 +12,9 @@ import java.util.TreeSet;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
+ * TODO Fill in description here.
+ * 
  * @author Jaden
- *
  */
 public class QueryBuilder {
 
@@ -58,6 +59,13 @@ public class QueryBuilder {
 	 * @return a list of results
 	 */
 	public List<InvertedIndex.Result> getQueryResults(String queryLine) {
+		/*
+		 * TODO What if queryLine does not exist? From the Collections API:
+		 * 
+		 * > The methods of this class all throw a NullPointerException if the collections or class objects provided to them are null.
+		 * 
+		 * So when you call unmodifiableList(null) you will cause a null pointer.
+		 */
 		return Collections.unmodifiableList(this.querySet.get(queryLine));
 
 	}
