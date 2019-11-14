@@ -3,7 +3,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collections;
 
 /**
  * Class responsible for running this project based on the provided command-line
@@ -21,9 +20,8 @@ public class Driver {
 	 * inverted index.
 	 *
 	 * @param args flag/value pairs used to start this program
-	 * @throws IOException
 	 */
-	public static void main(String[] args) throws IOException { // TODO Remove throws IOException
+	public static void main(String[] args) {
 		InvertedIndex index = new InvertedIndex();
 		// store initial start time
 		Instant start = Instant.now();
@@ -50,7 +48,7 @@ public class Driver {
 		if (parse.hasFlag("-index")) {
 			Path path = parse.getPath("-index", Path.of("index.json"));
 			try {
-				index.printIndex(path.toString()); // TODO Change printIndex to take a path object
+				index.printIndex(path);
 			} catch (IOException e) {
 				System.out.println("Unable to write the index to path: " + path);
 			}
@@ -70,29 +68,26 @@ public class Driver {
 		 * This if writes the output file to the path with flag "-query"
 		 */
 		if (parse.hasFlag("-query") && parse.getPath("-query") != null) {
-			Path qPath = parse.getPath("-query"); // TODO Rename
+			Path path = parse.getPath("-query");
 			try {
-				qBuilder.makeQueryFile(qPath, parse.hasFlag("-exact"));
+				qBuilder.makeQueryFile(path, parse.hasFlag("-exact"));
 			} catch (IOException e) {
-				System.out.println("Unable to read the query file" + qPath.toString());
+				System.out.println("Unable to read the query file" + path.toString());
 
 			} catch (Exception s) {
-				System.out.println("Unable to do something to the query file" + qPath.toString());
-				s.printStackTrace(); // TODO Remove
+				System.out.println("Unable to do something to the query file" + path.toString());
+				s.printStackTrace();
 			}
 		}
 		/*
 		 * This if writes the output file to the path with flag "-results"
 		 */
 		if (parse.hasFlag("-results")) {
-			Path path = parse.getPath("-results", Path.of("resutls.json"));
+			Path path = parse.getPath("-results", Path.of("results.json"));
 			try {
-				SimpleJsonWriter.asQuery(Collections.emptyMap(), Path.of("results.json")); // TODO Remove and debug
 				qBuilder.write(path);
-			} catch (NullPointerException n) {
-				System.out.println("Cannot write null file");
 			} catch (IOException e) {
-				System.out.println("Cannot write results");
+				System.out.println("Cannot write results from path: " + path.toString());
 			}
 		}
 		// calculate time elapsed and output

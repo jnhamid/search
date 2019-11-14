@@ -4,15 +4,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Collectors;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
  * This is a Builder class for our InvertedIndex class.
- * 
- * @author Jaden 
+ *
+ * @author Jaden
  */
 public class InvertedIndexBuilder {
 
@@ -25,10 +26,10 @@ public class InvertedIndexBuilder {
 	 * Snowball Stemmer
 	 */
 	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
-	
+
 	/**
-	 * TODO 
-	 * 
+	 * Constructor
+	 *
 	 * @param index Inverted Index structure that will be built.
 	 */
 	public InvertedIndexBuilder(InvertedIndex index) {
@@ -37,21 +38,20 @@ public class InvertedIndexBuilder {
 
 	/**
 	 * Will build index by traversing files
-	 * 
-	 * @param path  The Path that is getting checked
+	 *
+	 * @param path The Path that is getting checked
 	 * @throws IOException
 	 */
-	public void build(Path path) throws IOException {
-		if (Files.isRegularFile(path)) {
-			addPath(this.index, path);
-		} else {
-			for (Path newPath : getTextFiles(path)) {
-				addPath(this.index, newPath);
-			}
-		}
-	}
-	
-	/* TODO
+//	public void build(Path path) throws IOException {
+//		if (Files.isRegularFile(path)) {
+//			addPath(this.index, path);
+//		} else {
+//			for (Path newPath : getTextFiles(path)) {
+//				addPath(this.index, newPath);
+//			}
+//		}
+//	}
+
 	public void build(Path path) throws IOException {
 		if (Files.isRegularFile(path)) {
 			addPath(path);
@@ -60,16 +60,21 @@ public class InvertedIndexBuilder {
 				addPath(newPath);
 			}
 		}
-	}	
-	
+	}
+
+	/**
+	 * Overloaded addpath() calls addPath(this.index, path)
+	 *
+	 * @param path path to be added
+	 * @throws IOException
+	 */
 	public void addPath(Path path) throws IOException {
 		addPath(this.index, path);
 	}
-	*/
 
 	/**
 	 * Checks to see if path is a text file and not a directory or some trash file
-	 * 
+	 *
 	 * @param path file that you are checking
 	 * @return if its a text file
 	 */
@@ -80,7 +85,7 @@ public class InvertedIndexBuilder {
 
 	/**
 	 * Gets a list of files by walking the directory or file
-	 * 
+	 *
 	 * @param path path or directory that needs to be traversed
 	 * @return a list of text files
 	 * @throws IOException
@@ -92,7 +97,7 @@ public class InvertedIndexBuilder {
 
 	/**
 	 * Adds Path to index
-	 * 
+	 *
 	 * @param index the InvertedIndex that the file is getting added to
 	 * @param file  the Path that is getting added to index.
 	 * @throws IOException

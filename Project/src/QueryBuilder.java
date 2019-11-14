@@ -9,11 +9,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
- * TODO Fill in description here.
- * 
+ * This class builds queries
+ *
  * @author Jaden
  */
 public class QueryBuilder {
@@ -35,7 +36,7 @@ public class QueryBuilder {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param index InvertedIndex that the queries are being built on
 	 */
 	public QueryBuilder(InvertedIndex index) {
@@ -45,7 +46,7 @@ public class QueryBuilder {
 
 	/**
 	 * A getter for query lines
-	 * 
+	 *
 	 * @return a set of query lines
 	 */
 	public Set<String> getQueryLines() {
@@ -54,25 +55,22 @@ public class QueryBuilder {
 
 	/**
 	 * A getter for resutls of query lines
-	 * 
+	 *
 	 * @param queryLine the query you want results for
 	 * @return a list of results
 	 */
 	public List<InvertedIndex.Result> getQueryResults(String queryLine) {
-		/*
-		 * TODO What if queryLine does not exist? From the Collections API:
-		 * 
-		 * > The methods of this class all throw a NullPointerException if the collections or class objects provided to them are null.
-		 * 
-		 * So when you call unmodifiableList(null) you will cause a null pointer.
-		 */
-		return Collections.unmodifiableList(this.querySet.get(queryLine));
+		ArrayList<InvertedIndex.Result> line = this.querySet.get(queryLine);
+		if (line != null) {
+			return Collections.unmodifiableList(line);
+		}
+		return Collections.emptyList();
 
 	}
 
 	/**
 	 * will write query from path
-	 * 
+	 *
 	 * @param fileName path of output file
 	 * @throws IOException
 	 */
@@ -83,7 +81,7 @@ public class QueryBuilder {
 	/**
 	 * Gets queries from the input path and performs the searches.
 	 *
-	 * @param path The path to the Query file.
+	 * @param path        The path to the Query file.
 	 * @param exactSearch True if we are doing exact search.
 	 * @throws IOException Could happen.
 	 */
@@ -99,7 +97,7 @@ public class QueryBuilder {
 	/**
 	 * Parses a Query line made up of words.
 	 *
-	 * @param line The line we are parsing.
+	 * @param line        The line we are parsing.
 	 * @param exactSearch Wether we are doing exact search or not.
 	 */
 	public void makeQueryLine(String line, boolean exactSearch) {
@@ -109,6 +107,7 @@ public class QueryBuilder {
 			this.querySet.put(joined, index.search(queries, exactSearch));
 		}
 	}
+
 	/**
 	 * Function that checks if the map is empty.
 	 *

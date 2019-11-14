@@ -1,6 +1,13 @@
-import java.util.*;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * @author Jnhamid This is the class for our Custom Data Structure
@@ -26,7 +33,7 @@ public class InvertedIndex {
 
 	/**
 	 * An innerclass of results for the queries and words in index
-	 * 
+	 *
 	 * @author Jaden
 	 *
 	 */
@@ -49,7 +56,7 @@ public class InvertedIndex {
 
 		/**
 		 * constructor
-		 * 
+		 *
 		 * @param fileName The location of Result
 		 */
 		public Result(String fileName) {
@@ -59,22 +66,9 @@ public class InvertedIndex {
 
 		}
 
-		/**
-		 * Better Constructor
-		 * 
-		 * @param fileName TODO
-		 * @param count TODO 
-		 * @param score TODO
-		 */
-		public Result(String fileName, int count, double score) { // TODO Remove score parameter (call update)
-			this.score = score;
-			this.count = count;
-			this.fileName = fileName;
-		}
-
 		/*
 		 * Overridden compareTo
-		 * 
+		 *
 		 * @param o other result that is comparing
 		 */
 		@Override
@@ -94,7 +88,7 @@ public class InvertedIndex {
 
 		/**
 		 * a helper method for creating results
-		 * 
+		 *
 		 * @param other the other result to check if two files have the same name
 		 * @return true if file name is the same
 		 */
@@ -104,7 +98,7 @@ public class InvertedIndex {
 
 		/**
 		 * getting for score
-		 * 
+		 *
 		 * @return score
 		 */
 		public double getScore() {
@@ -113,7 +107,7 @@ public class InvertedIndex {
 
 		/**
 		 * getter for count
-		 * 
+		 *
 		 * @return count
 		 */
 		public int getCount() {
@@ -122,17 +116,17 @@ public class InvertedIndex {
 
 		/**
 		 * setter for count
-		 * 
+		 *
 		 * @param word the word to be updated
 		 */
-		public void update(String word) { // TODO private
+		private void update(String word) {
 			this.count += index.get(word).get(fileName).size();
 			this.score = (double) this.count / counts.get(this.fileName);
 		}
 
 		/**
 		 * getter for fileName
-		 * 
+		 *
 		 * @return fileName
 		 */
 		public String getFileName() {
@@ -141,7 +135,7 @@ public class InvertedIndex {
 
 		/**
 		 * pretty string for fileName
-		 * 
+		 *
 		 * @return String for writing
 		 */
 		public String getFileNameString() {
@@ -150,7 +144,7 @@ public class InvertedIndex {
 
 		/**
 		 * pretty string for count
-		 * 
+		 *
 		 * @return String for writing
 		 */
 		public String getCountString() {
@@ -159,7 +153,7 @@ public class InvertedIndex {
 
 		/**
 		 * pretty string for score
-		 * 
+		 *
 		 * @return String for writing
 		 */
 		public String getScoreString() {
@@ -177,12 +171,12 @@ public class InvertedIndex {
 
 	/**
 	 * Will add element to our Inverted Index.
-	 * 
+	 *
 	 * @param word to be added
 	 * @param file to be added
 	 * @param pos  to be added
 	 * @throws IOException
-	 * 
+	 *
 	 */
 	public void addElement(String word, String file, Integer pos) throws IOException {
 		index.putIfAbsent(word, new TreeMap<String, TreeSet<Integer>>());
@@ -197,7 +191,7 @@ public class InvertedIndex {
 
 	/**
 	 * A method that calls exactSearch or paritalSearch
-	 * 
+	 *
 	 * @param queries the queries being searched
 	 * @param exact   whether exactsearch or not
 	 * @return an arraylist of search results
@@ -208,7 +202,7 @@ public class InvertedIndex {
 
 	/**
 	 * Does exactSearch of a Collection of quieries
-	 * 
+	 *
 	 * @param queries the queries being searched
 	 * @return an arraylist of results
 	 */
@@ -227,7 +221,7 @@ public class InvertedIndex {
 
 	/**
 	 * Does partialSearch of a Collection of quieries
-	 * 
+	 *
 	 * @param queries the queries being searched
 	 * @return an arraylist of results
 	 */
@@ -251,69 +245,38 @@ public class InvertedIndex {
 
 	/**
 	 * A helper for search
-	 * 
+	 *
 	 * @param results the Arraylist of results
 	 * @param word    the word being searched
 	 * @param lookup  lookup checker for duplicates
 	 */
 	public void searchHelper(ArrayList<Result> results, String word, Map<String, Result> lookup) {
 		for (String fileName : this.index.get(word).keySet()) {
-			if (lookup.containsKey(fileName)) {
-				lookup.get(fileName).update(word);
-			} else {
+			if (!lookup.containsKey(fileName)) {
 				Result result = new Result(fileName);
-				result.update(word);
 				lookup.put(fileName, result);
 				results.add(result);
 			}
-			
-			/* TODO
-			if (!lookup.containsKey(fileName)){
-				Result result = new Result(fileName);
-				lookup.put(fileName, result);
-				results.add(result);
-			}			
-			
+
 			lookup.get(fileName).update(word);
-			*/
+
 		}
 
-	}
-
-	/**
-	 * This function will make the result entry
-	 * 
-	 * @param word word being searched in index
-	 * @return an arraylist of results
-	 */
-	public ArrayList<Result> makeResult(String word) { // TODO Remove
-		ArrayList<Result> results = new ArrayList<>();
-
-		if (this.contains(word)) {
-			var files = this.index.get(word).keySet();
-			for (String file : files) {
-				Result result = new Result(file);
-				result.update(word);
-
-				results.add(result);
-			}
-		}
-		return results;
 	}
 
 	/**
 	 * will output to file using method in SimpleJsonWriter
-	 * 
+	 *
 	 * @param outFile file name of file that is getting written
 	 * @throws IOException
 	 */
-	public void printIndex(String outFile) throws IOException {
-		SimpleJsonWriter.asDoubleNested(index, Path.of(outFile));
+	public void printIndex(Path outFile) throws IOException {
+		SimpleJsonWriter.asDoubleNested(index, outFile);
 	}
 
 	/**
 	 * getter for count
-	 * 
+	 *
 	 * @return count as a unmodifiableMap
 	 */
 	public Map<String, Integer> getCount() {
@@ -322,7 +285,7 @@ public class InvertedIndex {
 
 	/**
 	 * checks to see if word is in index
-	 * 
+	 *
 	 * @param word word that is getting checked
 	 * @return if index has word
 	 */
@@ -332,7 +295,7 @@ public class InvertedIndex {
 
 	/**
 	 * checks if the map has the specific word and if word contain path.
-	 * 
+	 *
 	 * @param word word that is getting checked
 	 * @param path path that is getting checked
 	 * @return if has word and path
@@ -343,7 +306,7 @@ public class InvertedIndex {
 
 	/**
 	 * checks if the map contains the specific word, path and index.
-	 * 
+	 *
 	 * @param word    word that is getting checked
 	 * @param path    path that is getting checked
 	 * @param postion postion that is getting checked
@@ -355,7 +318,7 @@ public class InvertedIndex {
 
 	/**
 	 * getter for set of words
-	 * 
+	 *
 	 * @return an unmodifiable set of words
 	 */
 	public Set<String> getWords() {
@@ -365,7 +328,7 @@ public class InvertedIndex {
 
 	/**
 	 * getter for set of locations
-	 * 
+	 *
 	 * @param word key value for locations
 	 * @return an unmodifiable set of Locations
 	 */
@@ -379,7 +342,7 @@ public class InvertedIndex {
 
 	/**
 	 * getter for set of postions
-	 * 
+	 *
 	 * @param word
 	 * @param location
 	 * @return an unmodifiable set of Positions
@@ -394,7 +357,7 @@ public class InvertedIndex {
 
 	/**
 	 * returns how many words is in inverted index.
-	 * 
+	 *
 	 * @return size of inverted index.
 	 */
 	public int size() {
@@ -403,7 +366,7 @@ public class InvertedIndex {
 
 	/**
 	 * returns how many paths are found in word.
-	 * 
+	 *
 	 * @param word to check
 	 * @return amount of paths, return 0 if not found
 	 */
