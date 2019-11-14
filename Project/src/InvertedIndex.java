@@ -62,11 +62,11 @@ public class InvertedIndex {
 		/**
 		 * Better Constructor
 		 * 
-		 * @param fileName
-		 * @param count
-		 * @param score
+		 * @param fileName TODO
+		 * @param count TODO 
+		 * @param score TODO
 		 */
-		public Result(String fileName, int count, double score) {
+		public Result(String fileName, int count, double score) { // TODO Remove score parameter (call update)
 			this.score = score;
 			this.count = count;
 			this.fileName = fileName;
@@ -125,7 +125,7 @@ public class InvertedIndex {
 		 * 
 		 * @param word the word to be updated
 		 */
-		public void update(String word) {
+		public void update(String word) { // TODO private
 			this.count += index.get(word).get(fileName).size();
 			this.score = (double) this.count / counts.get(this.fileName);
 		}
@@ -265,8 +265,17 @@ public class InvertedIndex {
 				result.update(word);
 				lookup.put(fileName, result);
 				results.add(result);
-
 			}
+			
+			/* TODO
+			if (!lookup.containsKey(fileName)){
+				Result result = new Result(fileName);
+				lookup.put(fileName, result);
+				results.add(result);
+			}			
+			
+			lookup.get(fileName).update(word);
+			*/
 		}
 
 	}
@@ -277,7 +286,7 @@ public class InvertedIndex {
 	 * @param word word being searched in index
 	 * @return an arraylist of results
 	 */
-	public ArrayList<Result> makeResult(String word) {
+	public ArrayList<Result> makeResult(String word) { // TODO Remove
 		ArrayList<Result> results = new ArrayList<>();
 
 		if (this.contains(word)) {

@@ -23,7 +23,7 @@ public class Driver {
 	 * @param args flag/value pairs used to start this program
 	 * @throws IOException
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException { // TODO Remove throws IOException
 		InvertedIndex index = new InvertedIndex();
 		// store initial start time
 		Instant start = Instant.now();
@@ -50,7 +50,7 @@ public class Driver {
 		if (parse.hasFlag("-index")) {
 			Path path = parse.getPath("-index", Path.of("index.json"));
 			try {
-				index.printIndex(path.toString());
+				index.printIndex(path.toString()); // TODO Change printIndex to take a path object
 			} catch (IOException e) {
 				System.out.println("Unable to write the index to path: " + path);
 			}
@@ -70,7 +70,7 @@ public class Driver {
 		 * This if writes the output file to the path with flag "-query"
 		 */
 		if (parse.hasFlag("-query") && parse.getPath("-query") != null) {
-			Path qPath = parse.getPath("-query");
+			Path qPath = parse.getPath("-query"); // TODO Rename
 			try {
 				qBuilder.makeQueryFile(qPath, parse.hasFlag("-exact"));
 			} catch (IOException e) {
@@ -78,8 +78,7 @@ public class Driver {
 
 			} catch (Exception s) {
 				System.out.println("Unable to do something to the query file" + qPath.toString());
-				s.printStackTrace();
-
+				s.printStackTrace(); // TODO Remove
 			}
 		}
 		/*
@@ -88,14 +87,13 @@ public class Driver {
 		if (parse.hasFlag("-results")) {
 			Path path = parse.getPath("-results", Path.of("resutls.json"));
 			try {
-				SimpleJsonWriter.asQuery(Collections.emptyMap(), Path.of("results.json"));
+				SimpleJsonWriter.asQuery(Collections.emptyMap(), Path.of("results.json")); // TODO Remove and debug
 				qBuilder.write(path);
 			} catch (NullPointerException n) {
 				System.out.println("Cannot write null file");
 			} catch (IOException e) {
 				System.out.println("Cannot write results");
 			}
-
 		}
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now());
