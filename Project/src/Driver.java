@@ -22,21 +22,37 @@ public class Driver {
 	 * @param args flag/value pairs used to start this program
 	 */
 	public static void main(String[] args) {
+		int numThreads = 1;
+
 		InvertedIndex index = new InvertedIndex();
 		// store initial start time
 		Instant start = Instant.now();
+		InvertedIndexBuilder indexBuilder = new InvertedIndexBuilder(index);
 
 		ArgumentParser parse = new ArgumentParser(args);
-		InvertedIndexBuilder indexBuilder = new InvertedIndexBuilder(index);
 		QueryBuilder qBuilder = new QueryBuilder(index);
 		/*
 		 * This if builds the InvertedIndex if has the flag "-path"
 		 */
+		if (parse.hasFlag("-threads")) {
+			try {
+				numThreads = Integer.parseInt(parse.getString("-threads"));
+				if (numThreads == 0) {
+					numThreads = 5;
+				}
+			} catch (Exception e) {
+				numThreads = 5;
+			}
+			index = new ThreadSafeInvertedIndex(numThreads);
+			indexBuilder = new ThreadSafeInvertedIndexBuilder((ThreadSafeInvertedIndex) index);
+			qBuilder = new ThreadSafeQueryBuilder((ThreadSafeInvertedIndex) index);
+		}
+
 		if (parse.hasFlag("-path") && parse.getPath("-path") != null) {
 			Path path = parse.getPath("-path");
 			try {
 				if (Files.exists(path)) {
-					indexBuilder.build(path);
+					indexBuilder.build(path, numThreads);
 				}
 			} catch (IOException e) {
 				System.out.println("File is a directory");
@@ -70,7 +86,8 @@ public class Driver {
 		if (parse.hasFlag("-query") && parse.getPath("-query") != null) {
 			Path path = parse.getPath("-query");
 			try {
-				qBuilder.makeQueryFile(path, parse.hasFlag("-exact"));
+
+				qBuilder.makeQueryFile(path, parse.hasFlag("-exact"), numThreads);
 			} catch (IOException e) {
 				System.out.println("Unable to read the query file" + path.toString());
 

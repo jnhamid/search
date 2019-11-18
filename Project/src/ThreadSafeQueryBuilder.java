@@ -3,79 +3,74 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
-
-import opennlp.tools.stemmer.snowball.SnowballStemmer;
 
 /**
- * This class builds queries
- *
+ * A threadSafe version of QueryBuilder
+ * 
  * @author Jaden
+ *
  */
-public class QueryBuilder {
+public class ThreadSafeQueryBuilder extends QueryBuilder {
 
 	/**
-	 * Index
+	 * workQueue
 	 */
-	private final InvertedIndex index;
+	WorkQueue workQueue;
 
 	/**
-	 * Set of Queries mapped to results
+	 * @param index
 	 */
-	private TreeMap<String, ArrayList<InvertedIndex.Result>> querySet;
-
-	/**
-	 * Snowball Stemmer
-	 */
-	public static final SnowballStemmer.ALGORITHM DEFAULT = SnowballStemmer.ALGORITHM.ENGLISH;
-
-	/**
-	 * Constructor
-	 *
-	 * @param index InvertedIndex that the queries are being built on
-	 */
-	public QueryBuilder(InvertedIndex index) {
-		this.index = index;
-		this.querySet = new TreeMap<>();
+	public ThreadSafeQueryBuilder(ThreadSafeInvertedIndex index) {
+		super(index);
+		new TreeMap<>();
 	}
 
 	/**
 	 * A getter for query lines
-	 *
+	 * 
 	 * @return a set of query lines
 	 */
+	@Override
 	public Set<String> getQueryLines() {
-		return Collections.unmodifiableSet(this.querySet.keySet());
+		return super.getQueryLines();
+
 	}
 
 	/**
 	 * A getter for resutls of query lines
-	 *
+	 * 
 	 * @param queryLine the query you want results for
 	 * @return a list of results
 	 */
+	@Override
 	public List<InvertedIndex.Result> getQueryResults(String queryLine) {
-		ArrayList<InvertedIndex.Result> line = this.querySet.get(queryLine);
-		if (line != null) {
-			return Collections.unmodifiableList(line);
-		}
-		return Collections.emptyList();
+		return super.getQueryResults(queryLine);
 
 	}
 
 	/**
 	 * will write query from path
-	 *
+	 * 
 	 * @param fileName path of output file
 	 * @throws IOException
 	 */
+	@Override
 	public void write(Path fileName) throws IOException {
-		SimpleJsonWriter.asQuery(this.querySet, fileName);
+		super.write(fileName);
+	}
+
+	/**
+	 * Function that checks if the map is empty.
+	 *
+	 * @return True if empty.
+	 */
+	@Override
+	public boolean isEmpty() {
+		return super.isEmpty();
+
 	}
 
 	/**
@@ -83,16 +78,23 @@ public class QueryBuilder {
 	 *
 	 * @param path        The path to the Query file.
 	 * @param exactSearch True if we are doing exact search.
-	 * @param numThreads number of threads for mulyithreading
 	 * @throws IOException Could happen.
 	 */
+	@Override
 	public void makeQueryFile(Path path, boolean exactSearch, int numThreads) throws IOException {
+		this.workQueue = new WorkQueue(numThreads);
 		try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);) {
 			String query;
 			while ((query = reader.readLine()) != null) {
-				makeQueryLine(query, exactSearch);
+				workQueue.execute(new Task(query, exactSearch));
 			}
+		}try {
+			workQueue.finish();
+		} catch (Exception e) {
+
 		}
+		workQueue.shutdown();
+
 	}
 
 	/**
@@ -101,21 +103,41 @@ public class QueryBuilder {
 	 * @param line        The line we are parsing.
 	 * @param exactSearch Wether we are doing exact search or not.
 	 */
+	@Override
 	public void makeQueryLine(String line, boolean exactSearch) {
-		TreeSet<String> queries = TextFileStemmer.uniqueStems(line);
-		String joined = String.join(" ", queries);
-		if (queries.size() != 0 && !querySet.containsKey(joined)) {
-			this.querySet.put(joined, index.search(queries, exactSearch));
-		}
+		super.makeQueryLine(line, exactSearch);
 	}
 
 	/**
-	 * Function that checks if the map is empty.
+	 * task class
+	 * 
+	 * @author Jaden
 	 *
-	 * @return True if empty.
 	 */
-	public boolean isEmpty() {
-		return this.querySet.keySet().size() == 0;
-	}
+	private class Task implements Runnable {
+		/** The prime number to add or list. */
+		private final String line;
+		/**
+		 * Whether or not a exactSearch
+		 */
+		private final boolean exact;
 
+		/**
+		 * Construtor
+		 * 
+		 * @param line
+		 * @param exact
+		 */
+		public Task(String line, boolean exact) {
+			this.line = line;
+			this.exact = exact;
+		}
+
+		@Override
+		public void run() {
+			synchronized (workQueue) {
+				makeQueryLine(line, exact);
+			}
+		}
+	}
 }
