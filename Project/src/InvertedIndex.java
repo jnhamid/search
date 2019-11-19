@@ -243,7 +243,6 @@ public class InvertedIndex {
 
 	}
 
-	// TODO Make private
 	/**
 	 * A helper for search
 	 *
@@ -251,7 +250,7 @@ public class InvertedIndex {
 	 * @param word    the word being searched
 	 * @param lookup  lookup checker for duplicates
 	 */
-	public void searchHelper(ArrayList<Result> results, String word, Map<String, Result> lookup) {
+	private void searchHelper(ArrayList<Result> results, String word, Map<String, Result> lookup) {
 		for (String fileName : this.index.get(word).keySet()) {
 			if (!lookup.containsKey(fileName)) {
 				Result result = new Result(fileName);

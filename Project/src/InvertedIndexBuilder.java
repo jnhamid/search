@@ -35,7 +35,7 @@ public class InvertedIndexBuilder {
 	public InvertedIndexBuilder(InvertedIndex index) {
 		this.index = index;
 	}
-	
+
 	/*
 	 * TODO Shouldn't need a number of threads here. Remove from the build method.
 	 */
@@ -43,11 +43,10 @@ public class InvertedIndexBuilder {
 	/**
 	 * Will build index by traversing files
 	 *
-	 * @param path       The Path that is getting checked
-	 * @param numThreads number of threads for multithreading
+	 * @param path The Path that is getting checked
 	 * @throws IOException
 	 */
-	public void build(Path path, int numThreads) throws IOException {
+	public void build(Path path) throws IOException {
 		if (Files.isRegularFile(path)) {
 			addPath(path);
 		} else {

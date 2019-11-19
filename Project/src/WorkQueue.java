@@ -11,7 +11,6 @@ import java.util.LinkedList;
  */
 public class WorkQueue {
 
-	
 	/**
 	 * Pool of worker threads that will wait in the background until work is
 	 * available.
@@ -21,7 +20,7 @@ public class WorkQueue {
 	/**
 	 * Number of pending workers
 	 */
-	public Integer pending; // TODO private int pending;
+	private int pending;
 
 	/** Queue of pending work requests. */
 	private final LinkedList<Runnable> queue;
@@ -39,7 +38,6 @@ public class WorkQueue {
 	 */
 	public WorkQueue() {
 		this(DEFAULT);
-		this.pending = 0; // TODO Remove
 	}
 
 	/**
@@ -67,11 +65,11 @@ public class WorkQueue {
 	 * @param r work request (in the form of a {@link Runnable} object)
 	 */
 	public void execute(Runnable r) {
-		// TODO incrementPending here
+		incrementPending();
 		synchronized (queue) {
 			queue.addLast(r);
 			queue.notifyAll();
-			incrementPending();
+
 		}
 	}
 
@@ -163,10 +161,11 @@ public class WorkQueue {
 				}
 				try {
 					r.run();
-					decrementPending(); // TODO Either place in a finally block or after the try/catch
 				} catch (RuntimeException e) {
 					// catch runtime exceptions to avoid leaking threads
 					System.err.println("Warning: Work queue encountered an exception while running.");
+				} finally {
+					decrementPending();
 				}
 			}
 		}

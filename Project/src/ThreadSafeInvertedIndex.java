@@ -16,18 +16,11 @@ public class ThreadSafeInvertedIndex extends InvertedIndex {
 	private final SimpleReadWriteLock lock;
 
 	/**
-	 * Number of Threads
-	 */
-	public final int numThreads; // TODO Remove
-
-	/**
-	 * Constructor of
+	 * Constructor
 	 *
-	 * @param numThreads
 	 */
-	public ThreadSafeInvertedIndex(Integer numThreads) {
+	public ThreadSafeInvertedIndex() {
 		super();
-		this.numThreads = numThreads;
 		lock = new SimpleReadWriteLock();
 
 	}
@@ -50,18 +43,6 @@ public class ThreadSafeInvertedIndex extends InvertedIndex {
 			lock.writeLock().unlock();
 		}
 
-	}
-
-	/**
-	 * A method that calls exactSearch or paritalSearch
-	 *
-	 * @param queries the queries being searched
-	 * @param exact   whether exactsearch or not
-	 * @return an arraylist of search results
-	 */
-	@Override // TODO Remove this method
-	public ArrayList<Result> search(Collection<String> queries, boolean exact) {
-		return exact ? exactSearch(queries) : partialSearch(queries);
 	}
 
 	/**
@@ -197,5 +178,5 @@ public class ThreadSafeInvertedIndex extends InvertedIndex {
 	}
 
 	// TODO Missing some methods at the end (size and the other get methods)
-	
+
 }

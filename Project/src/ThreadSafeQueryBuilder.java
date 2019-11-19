@@ -24,12 +24,13 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 	/**
 	 * workQueue
 	 */
-	WorkQueue workQueue; // TODO Pass in to the constructor
+	WorkQueue workQueue;
 
 	/**
-	 * @param index
+	 * @param index     index the query is being built from
+	 * @param workQueue the work queue
 	 */
-	public ThreadSafeQueryBuilder(ThreadSafeInvertedIndex index) {
+	public ThreadSafeQueryBuilder(ThreadSafeInvertedIndex index, WorkQueue workQueue) {
 		super(index);
 		new TreeMap<>();
 	}
@@ -56,7 +57,7 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 		return super.getQueryResults(queryLine); // TODO Shared data
 
 	}
-	
+
 	// TODO Have to worry about access to shared data
 
 	/**
