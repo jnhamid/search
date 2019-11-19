@@ -243,6 +243,7 @@ public class InvertedIndex {
 
 	}
 
+	// TODO Make private
 	/**
 	 * A helper for search
 	 *

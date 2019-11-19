@@ -7,6 +7,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
+/*
+ * TODO Multi- versus single- needs different implementations. It makes sense to instead
+ * of a direct extends relationship, create an QueryBuilderInterface that both classes
+ * implement.
+ */
+
 /**
  * A threadSafe version of QueryBuilder
  *
@@ -18,7 +24,7 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 	/**
 	 * workQueue
 	 */
-	WorkQueue workQueue;
+	WorkQueue workQueue; // TODO Pass in to the constructor
 
 	/**
 	 * @param index
@@ -35,7 +41,7 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 	 */
 	@Override
 	public Set<String> getQueryLines() {
-		return super.getQueryLines();
+		return super.getQueryLines(); // TODO Unsynchronized read of shared data
 
 	}
 
@@ -47,9 +53,11 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 	 */
 	@Override
 	public List<InvertedIndex.Result> getQueryResults(String queryLine) {
-		return super.getQueryResults(queryLine);
+		return super.getQueryResults(queryLine); // TODO Shared data
 
 	}
+	
+	// TODO Have to worry about access to shared data
 
 	/**
 	 * will write query from path
@@ -136,7 +144,7 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 
 		@Override
 		public void run() {
-			synchronized (workQueue) {
+			synchronized (workQueue) { // TODO Not quite multithreading
 				makeQueryLine(line, exact);
 			}
 		}

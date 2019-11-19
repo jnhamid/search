@@ -96,7 +96,7 @@ public class SimpleReadWriteLock {
 					try {
 						lock.wait(); // waiting until writer hits 0
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						e.printStackTrace(); // TODO Fix
 					}
 				}
 				++reader;
@@ -127,7 +127,7 @@ public class SimpleReadWriteLock {
 		/**
 		 * writer thread
 		 */
-		private Thread writeThread = new Thread();
+		private Thread writeThread = new Thread(); // TODO writeThread; and initialize in a constructor to null;
 
 		/**
 		 * Will wait until there are no active readers or writers in the system, and
@@ -141,7 +141,7 @@ public class SimpleReadWriteLock {
 					try {
 						lock.wait(); // waiting until writer hits 0
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						e.printStackTrace(); // TODO Fix
 					}
 				}
 				writeThread = Thread.currentThread();

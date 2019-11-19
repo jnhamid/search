@@ -107,6 +107,25 @@ public class QueryBuilder {
 		if (queries.size() != 0 && !querySet.containsKey(joined)) {
 			this.querySet.put(joined, index.search(queries, exactSearch));
 		}
+		
+		/* TODO
+		TreeSet<String> queries = TextFileStemmer.uniqueStems(line);
+		
+		if (queries.size() == 0) {
+			return;
+		}
+		
+		String joined = String.join(" ", queries);
+		
+		if (querySet.containsKey(joined)) {
+			return;
+		}
+		
+		ArrayList<Result> local = index.search(queries, exactSearch);
+		this.querySet.put(joined, local);
+		}
+		*/
+		
 	}
 
 	/**
