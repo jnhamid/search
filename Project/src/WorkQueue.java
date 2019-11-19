@@ -21,7 +21,7 @@ public class WorkQueue {
 	/**
 	 * Number of pending workers
 	 */
-	public Integer pending;
+	public Integer pending; // TODO private int pending;
 
 	/** Queue of pending work requests. */
 	private final LinkedList<Runnable> queue;
@@ -39,7 +39,7 @@ public class WorkQueue {
 	 */
 	public WorkQueue() {
 		this(DEFAULT);
-		this.pending = 0;
+		this.pending = 0; // TODO Remove
 	}
 
 	/**
@@ -67,6 +67,7 @@ public class WorkQueue {
 	 * @param r work request (in the form of a {@link Runnable} object)
 	 */
 	public void execute(Runnable r) {
+		// TODO incrementPending here
 		synchronized (queue) {
 			queue.addLast(r);
 			queue.notifyAll();
@@ -162,7 +163,7 @@ public class WorkQueue {
 				}
 				try {
 					r.run();
-					decrementPending();
+					decrementPending(); // TODO Either place in a finally block or after the try/catch
 				} catch (RuntimeException e) {
 					// catch runtime exceptions to avoid leaking threads
 					System.err.println("Warning: Work queue encountered an exception while running.");
