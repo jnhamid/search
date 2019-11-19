@@ -9,7 +9,7 @@ import java.util.TreeMap;
 
 /**
  * A threadSafe version of QueryBuilder
- * 
+ *
  * @author Jaden
  *
  */
@@ -30,7 +30,7 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 
 	/**
 	 * A getter for query lines
-	 * 
+	 *
 	 * @return a set of query lines
 	 */
 	@Override
@@ -41,7 +41,7 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 
 	/**
 	 * A getter for resutls of query lines
-	 * 
+	 *
 	 * @param queryLine the query you want results for
 	 * @return a list of results
 	 */
@@ -53,7 +53,7 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 
 	/**
 	 * will write query from path
-	 * 
+	 *
 	 * @param fileName path of output file
 	 * @throws IOException
 	 */
@@ -88,7 +88,8 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 			while ((query = reader.readLine()) != null) {
 				workQueue.execute(new Task(query, exactSearch));
 			}
-		}try {
+		}
+		try {
 			workQueue.finish();
 		} catch (Exception e) {
 
@@ -110,7 +111,7 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 
 	/**
 	 * task class
-	 * 
+	 *
 	 * @author Jaden
 	 *
 	 */
@@ -124,9 +125,9 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 
 		/**
 		 * Construtor
-		 * 
-		 * @param line
-		 * @param exact
+		 *
+		 * @param line  the line to be made
+		 * @param exact whether or not a exact search or nor
 		 */
 		public Task(String line, boolean exact) {
 			this.line = line;

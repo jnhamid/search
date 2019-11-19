@@ -83,7 +83,7 @@ public class QueryBuilder {
 	 *
 	 * @param path        The path to the Query file.
 	 * @param exactSearch True if we are doing exact search.
-	 * @param numThreads number of threads for mulyithreading
+	 * @param numThreads  number of threads for mulyithreading
 	 * @throws IOException Could happen.
 	 */
 	public void makeQueryFile(Path path, boolean exactSearch, int numThreads) throws IOException {

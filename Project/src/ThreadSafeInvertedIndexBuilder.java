@@ -3,7 +3,7 @@ import java.nio.file.Path;
 
 /**
  * ThreadSafe version of InvertedIndexBuilder
- * 
+ *
  * @author Jaden
  *
  */
@@ -23,7 +23,7 @@ public class ThreadSafeInvertedIndexBuilder extends InvertedIndexBuilder {
 
 	/**
 	 * Will build index by traversing files
-	 * 
+	 *
 	 * @param path The Path that is getting checked
 	 * @throws IOException
 	 */
@@ -45,7 +45,7 @@ public class ThreadSafeInvertedIndexBuilder extends InvertedIndexBuilder {
 
 	/**
 	 * The Task class for multithreading
-	 * 
+	 *
 	 * @author Jaden
 	 *
 	 */
@@ -59,8 +59,8 @@ public class ThreadSafeInvertedIndexBuilder extends InvertedIndexBuilder {
 		private final ThreadSafeInvertedIndex index;
 
 		/**
-		 * @param path
-		 * @param index
+		 * @param path  the path to be added
+		 * @param index the index being added to
 		 */
 		public Task(Path path, ThreadSafeInvertedIndex index) {
 			this.path = path;
