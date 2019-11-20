@@ -190,6 +190,28 @@ public class InvertedIndex {
 	}
 
 	/**
+	 * will add all elements for other into our index
+	 *
+	 * @param other the InvertedIndex to be added
+	 */
+	public void addAll(InvertedIndex other) {
+		for (String word : other.index.keySet()) {
+			if (this.index.containsKey(word) == false) {
+				this.index.put(word, other.index.get(word));
+			} else {
+				for (String path : other.index.get(word).keySet()) {
+					if (!this.index.get(word).containsKey(path)) {
+						this.index.get(word).put(path, other.index.get(word).get(path));
+					} else {
+						this.index.get(word).get(path).addAll(other.index.get(word).get(path));
+					}
+				}
+			}
+		}
+		this.counts.putAll(other.counts);
+	}
+
+	/**
 	 * A method that calls exactSearch or paritalSearch
 	 *
 	 * @param queries the queries being searched

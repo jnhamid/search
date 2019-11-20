@@ -17,7 +17,7 @@ import opennlp.tools.stemmer.snowball.SnowballStemmer;
  *
  * @author Jaden
  */
-public class QueryBuilder {
+public class QueryBuilder implements QueryBuilderInterface {
 
 	/**
 	 * Index
@@ -49,6 +49,7 @@ public class QueryBuilder {
 	 *
 	 * @return a set of query lines
 	 */
+	@Override
 	public Set<String> getQueryLines() {
 		return Collections.unmodifiableSet(this.querySet.keySet());
 	}
@@ -59,6 +60,7 @@ public class QueryBuilder {
 	 * @param queryLine the query you want results for
 	 * @return a list of results
 	 */
+	@Override
 	public List<InvertedIndex.Result> getQueryResults(String queryLine) {
 		ArrayList<InvertedIndex.Result> line = this.querySet.get(queryLine);
 		if (line != null) {
@@ -74,6 +76,7 @@ public class QueryBuilder {
 	 * @param fileName path of output file
 	 * @throws IOException
 	 */
+	@Override
 	public void write(Path fileName) throws IOException {
 		SimpleJsonWriter.asQuery(this.querySet, fileName);
 	}
@@ -86,6 +89,7 @@ public class QueryBuilder {
 	 * @param numThreads  number of threads for mulyithreading
 	 * @throws IOException Could happen.
 	 */
+	@Override
 	public void makeQueryFile(Path path, boolean exactSearch, int numThreads) throws IOException {
 		try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);) {
 			String query;
@@ -123,6 +127,7 @@ public class QueryBuilder {
 	 *
 	 * @return True if empty.
 	 */
+	@Override
 	public boolean isEmpty() {
 		return this.querySet.keySet().size() == 0;
 	}

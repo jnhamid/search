@@ -13,6 +13,9 @@ public class ThreadSafeInvertedIndexBuilder extends InvertedIndexBuilder {
 	 */
 	private final ThreadSafeInvertedIndex index;
 
+	/**
+	 * The work queue
+	 */
 	private final WorkQueue queue;
 
 	/**
@@ -26,27 +29,6 @@ public class ThreadSafeInvertedIndexBuilder extends InvertedIndexBuilder {
 		this.index = index;
 		this.queue = queue;
 	}
-
-	/**
-	 * Will build index by traversing files
-	 *
-	 * @param path The Path that is getting checked
-	 * @throws IOException
-	 */
-//	public void build(Path path, int numThreads) throws IOException {
-//		WorkQueue queue = new WorkQueue(numThreads);
-//		for (Path currentPath : getTextFiles(path)) {
-//			if (isTextFile(currentPath)) {
-//				queue.execute(new Task(currentPath, this.index));
-//			}
-//		}
-//		try {
-//			queue.finish();
-//		} catch (Exception e) {
-//			System.out.println("The work queue encountered an error.");
-//		}
-//		queue.shutdown();
-//	}
 
 	@Override
 	public void build(Path path) throws IOException {
@@ -86,7 +68,7 @@ public class ThreadSafeInvertedIndexBuilder extends InvertedIndexBuilder {
 
 				InvertedIndex local = new InvertedIndex();
 				addPath(local, path);
-				index.addAll(local); // TODO make addAll
+				index.addAll(local);
 
 			} catch (IOException e) {
 				System.out.println("There is an error adding a path: " + path);

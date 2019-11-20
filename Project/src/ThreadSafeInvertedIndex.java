@@ -45,6 +45,16 @@ public class ThreadSafeInvertedIndex extends InvertedIndex {
 
 	}
 
+	@Override
+	public void addAll(InvertedIndex other) {
+		lock.writeLock().lock();
+		try {
+			super.addAll(other);
+		} finally {
+			lock.writeLock().unlock();
+		}
+	}
+
 	/**
 	 * Does exactSearch of a Collection of quieries
 	 *
@@ -177,6 +187,66 @@ public class ThreadSafeInvertedIndex extends InvertedIndex {
 
 	}
 
-	// TODO Missing some methods at the end (size and the other get methods)
+	@Override
+	public Set<String> getLocations(String word) {
+		lock.readLock().lock();
+		try {
+			return super.getLocations(word);
+		} finally {
+			lock.readLock().unlock();
+		}
+
+	}
+
+	/**
+	 * getter for set of postions
+	 *
+	 * @param word
+	 * @param location
+	 * @return an unmodifiable set of Positions
+	 */
+	@Override
+	public Set<Integer> getPositions(String word, String location) {
+		lock.readLock().lock();
+		try {
+			return super.getPositions(word, location);
+		} finally {
+			lock.readLock().unlock();
+		}
+
+	}
+
+	/**
+	 * returns how many words is in inverted index.
+	 *
+	 * @return size of inverted index.
+	 */
+	@Override
+	public int size() {
+		lock.readLock().lock();
+		try {
+			return super.size();
+		} finally {
+			lock.readLock().unlock();
+		}
+
+	}
+
+	/**
+	 * returns how many paths are found in word.
+	 *
+	 * @param word to check
+	 * @return amount of paths, return 0 if not found
+	 */
+	@Override
+	public int size(String word) {
+		lock.readLock().lock();
+		try {
+			return super.size(word);
+		} finally {
+			lock.readLock().unlock();
+		}
+
+	}
 
 }

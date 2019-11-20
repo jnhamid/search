@@ -3,15 +3,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
-
-/*
- * TODO Multi- versus single- needs different implementations. It makes sense to instead
- * of a direct extends relationship, create an QueryBuilderInterface that both classes
- * implement.
- */
+import java.util.TreeSet;
 
 /**
  * A threadSafe version of QueryBuilder
@@ -19,20 +16,35 @@ import java.util.TreeMap;
  * @author Jaden
  *
  */
-public class ThreadSafeQueryBuilder extends QueryBuilder {
+public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 
 	/**
 	 * workQueue
 	 */
-	WorkQueue workQueue;
+	private final WorkQueue workQueue;
+
+	/**
+	 * the index
+	 */
+	private final ThreadSafeInvertedIndex index;
+
+	/**
+	 * The set of queries
+	 */
+	private final TreeMap<String, ArrayList<InvertedIndex.Result>> querySet;
 
 	/**
 	 * @param index     index the query is being built from
 	 * @param workQueue the work queue
 	 */
 	public ThreadSafeQueryBuilder(ThreadSafeInvertedIndex index, WorkQueue workQueue) {
-		super(index);
-		new TreeMap<>();
+		this.index = index;
+		this.querySet = new TreeMap<>();
+		this.workQueue = workQueue;
+	}
+
+	{
+
 	}
 
 	/**
@@ -42,7 +54,9 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 	 */
 	@Override
 	public Set<String> getQueryLines() {
-		return super.getQueryLines(); // TODO Unsynchronized read of shared data
+		synchronized (querySet) {
+			return Collections.unmodifiableSet(querySet.keySet());
+		}
 
 	}
 
@@ -54,11 +68,11 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 	 */
 	@Override
 	public List<InvertedIndex.Result> getQueryResults(String queryLine) {
-		return super.getQueryResults(queryLine); // TODO Shared data
+		synchronized (querySet) {
+			return Collections.unmodifiableList(querySet.get(queryLine));
+		}
 
 	}
-
-	// TODO Have to worry about access to shared data
 
 	/**
 	 * will write query from path
@@ -68,7 +82,9 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 	 */
 	@Override
 	public void write(Path fileName) throws IOException {
-		super.write(fileName);
+		synchronized (querySet) {
+			SimpleJsonWriter.asQuery(this.querySet, fileName);
+		}
 	}
 
 	/**
@@ -78,7 +94,9 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 	 */
 	@Override
 	public boolean isEmpty() {
-		return super.isEmpty();
+		synchronized (querySet) {
+			return this.querySet.size() == 0;
+		}
 
 	}
 
@@ -91,7 +109,6 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 	 */
 	@Override
 	public void makeQueryFile(Path path, boolean exactSearch, int numThreads) throws IOException {
-		this.workQueue = new WorkQueue(numThreads);
 		try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);) {
 			String query;
 			while ((query = reader.readLine()) != null) {
@@ -103,7 +120,7 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 		} catch (Exception e) {
 
 		}
-		workQueue.shutdown();
+		// workQueue.shutdown();
 
 	}
 
@@ -115,7 +132,24 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 	 */
 	@Override
 	public void makeQueryLine(String line, boolean exactSearch) {
-		super.makeQueryLine(line, exactSearch);
+		TreeSet<String> queries = TextFileStemmer.uniqueStems(line);
+
+		if (queries.size() == 0) {
+			return;
+		}
+
+		String joined = String.join(" ", queries);
+		synchronized (querySet) {
+			if (querySet.containsKey(joined)) {
+				return;
+			}
+		}
+
+		ArrayList<InvertedIndex.Result> local = index.search(queries, exactSearch);
+		synchronized (querySet) {
+			this.querySet.put(joined, local);
+		}
+
 	}
 
 	/**
@@ -145,9 +179,8 @@ public class ThreadSafeQueryBuilder extends QueryBuilder {
 
 		@Override
 		public void run() {
-			synchronized (workQueue) { // TODO Not quite multithreading
-				makeQueryLine(line, exact);
-			}
+			makeQueryLine(line, exact);
+
 		}
 	}
 }

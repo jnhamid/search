@@ -36,10 +36,6 @@ public class InvertedIndexBuilder {
 		this.index = index;
 	}
 
-	/*
-	 * TODO Shouldn't need a number of threads here. Remove from the build method.
-	 */
-
 	/**
 	 * Will build index by traversing files
 	 *

@@ -30,7 +30,7 @@ public class Driver {
 		InvertedIndexBuilder indexBuilder = new InvertedIndexBuilder(index);
 
 		ArgumentParser parse = new ArgumentParser(args);
-		QueryBuilder qBuilder = new QueryBuilder(index);
+		QueryBuilderInterface qBuilder = new QueryBuilder(index);
 
 		/*
 		 * This if builds the InvertedIndex if has the flag "-path"
