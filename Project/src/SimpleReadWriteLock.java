@@ -96,7 +96,7 @@ public class SimpleReadWriteLock {
 					try {
 						lock.wait(); // waiting until writer hits 0
 					} catch (InterruptedException e) {
-						// TODO Fix
+
 					}
 				}
 				++reader;
@@ -148,7 +148,6 @@ public class SimpleReadWriteLock {
 					try {
 						lock.wait(); // waiting until writer hits 0
 					} catch (InterruptedException e) {
-						// TODO Fix
 					}
 				}
 				writeThread = Thread.currentThread();
