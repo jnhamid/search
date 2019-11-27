@@ -208,6 +208,11 @@ public class InvertedIndex {
 				}
 			}
 		}
+		
+		/*
+		 * TODO This below only works if there is no overlap between the two indexes.
+		 * Loop through and make sure you aren't overwriting data.
+		 */
 		this.counts.putAll(other.counts);
 	}
 

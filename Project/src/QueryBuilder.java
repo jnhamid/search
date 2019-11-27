@@ -27,7 +27,7 @@ public class QueryBuilder implements QueryBuilderInterface {
 	/**
 	 * Set of Queries mapped to results
 	 */
-	private TreeMap<String, ArrayList<InvertedIndex.Result>> querySet;
+	private TreeMap<String, ArrayList<InvertedIndex.Result>> querySet; // TODO final
 
 	/**
 	 * Snowball Stemmer
@@ -81,6 +81,7 @@ public class QueryBuilder implements QueryBuilderInterface {
 		SimpleJsonWriter.asQuery(this.querySet, fileName);
 	}
 
+	// TODO Remove
 	/**
 	 * Gets queries from the input path and performs the searches.
 	 *

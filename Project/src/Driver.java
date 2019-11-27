@@ -24,6 +24,8 @@ public class Driver {
 	public static void main(String[] args) {
 		int numThreads = 1;
 
+		// TODO Declare but do not define these objects
+		
 		InvertedIndex index = new InvertedIndex();
 		// store initial start time
 		Instant start = Instant.now();
@@ -32,6 +34,8 @@ public class Driver {
 		ArgumentParser parse = new ArgumentParser(args);
 		QueryBuilderInterface qBuilder = new QueryBuilder(index);
 
+		// TODO WorkQueue queue = null;
+		
 		/*
 		 * This if builds the InvertedIndex if has the flag "-path"
 		 */
@@ -48,7 +52,18 @@ public class Driver {
 			index = new ThreadSafeInvertedIndex();
 			indexBuilder = new ThreadSafeInvertedIndexBuilder((ThreadSafeInvertedIndex) index, queue);
 			qBuilder = new ThreadSafeQueryBuilder((ThreadSafeInvertedIndex) index, queue);
+			
+			/* TODO
+			ThreadSafeInvertedIndex threadSafe = new ThreadSafeInvertedIndex();
+			index = threadSafe;
+			indexBuilder = new ThreadSafeInvertedIndexBuilder(threadSafe, queue);
+			qBuilder = new ThreadSafeQueryBuilder(threadSafe, queue);
+			*/
 		}
+		/* TODO
+		else {
+			init to single threaded versions
+		}*/
 
 		if (parse.hasFlag("-path") && parse.getPath("-path") != null) {
 			Path path = parse.getPath("-path");
@@ -109,6 +124,13 @@ public class Driver {
 				System.out.println("Cannot write results from path: " + path.toString());
 			}
 		}
+		
+		/* TODO
+		if (queue != null) {
+			shutdown
+		}
+		*/
+		
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now());
 		double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();

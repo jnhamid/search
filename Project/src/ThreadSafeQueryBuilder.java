@@ -34,6 +34,7 @@ public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 	private final TreeMap<String, ArrayList<InvertedIndex.Result>> querySet;
 
 	/**
+	 * TODO 
 	 * @param index     index the query is being built from
 	 * @param workQueue the work queue
 	 */
@@ -43,7 +44,7 @@ public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 		this.workQueue = workQueue;
 	}
 
-	{
+	{ // TODO Clean
 
 	}
 
@@ -69,6 +70,7 @@ public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 	@Override
 	public List<InvertedIndex.Result> getQueryResults(String queryLine) {
 		synchronized (querySet) {
+			// TODO Check for null like you did before
 			return Collections.unmodifiableList(querySet.get(queryLine));
 		}
 
@@ -122,6 +124,10 @@ public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 		}
 		// workQueue.shutdown();
 
+		/* TODO
+		QueryBuilderInterface.super.makeQueryFile(path, exactSearch);
+		workQueue.finish();
+		*/
 	}
 
 	/**
@@ -132,6 +138,8 @@ public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 	 */
 	@Override
 	public void makeQueryLine(String line, boolean exactSearch) {
+		// TODO Should just create a task and add to the work queue
+		// TODO Move this code into run()
 		TreeSet<String> queries = TextFileStemmer.uniqueStems(line);
 
 		if (queries.size() == 0) {
