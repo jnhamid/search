@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +24,7 @@ public class QueryBuilder implements QueryBuilderInterface {
 	/**
 	 * Set of Queries mapped to results
 	 */
-	private TreeMap<String, ArrayList<InvertedIndex.Result>> querySet; // TODO final
+	private final TreeMap<String, ArrayList<InvertedIndex.Result>> querySet;
 
 	/**
 	 * Snowball Stemmer
@@ -81,31 +78,13 @@ public class QueryBuilder implements QueryBuilderInterface {
 		SimpleJsonWriter.asQuery(this.querySet, fileName);
 	}
 
-	// TODO Remove
-	/**
-	 * Gets queries from the input path and performs the searches.
-	 *
-	 * @param path        The path to the Query file.
-	 * @param exactSearch True if we are doing exact search.
-	 * @param numThreads  number of threads for mulyithreading
-	 * @throws IOException Could happen.
-	 */
-	@Override
-	public void makeQueryFile(Path path, boolean exactSearch, int numThreads) throws IOException {
-		try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);) {
-			String query;
-			while ((query = reader.readLine()) != null) {
-				makeQueryLine(query, exactSearch);
-			}
-		}
-	}
-
 	/**
 	 * Parses a Query line made up of words.
 	 *
 	 * @param line        The line we are parsing.
 	 * @param exactSearch Wether we are doing exact search or not.
 	 */
+	@Override
 	public void makeQueryLine(String line, boolean exactSearch) {
 		TreeSet<String> queries = TextFileStemmer.uniqueStems(line);
 

@@ -23,19 +23,14 @@ public class Driver {
 	 */
 	public static void main(String[] args) {
 		int numThreads = 1;
-
-		// TODO Declare but do not define these objects
-		
-		InvertedIndex index = new InvertedIndex();
+		InvertedIndex index;
 		// store initial start time
 		Instant start = Instant.now();
-		InvertedIndexBuilder indexBuilder = new InvertedIndexBuilder(index);
-
+		InvertedIndexBuilder indexBuilder;
 		ArgumentParser parse = new ArgumentParser(args);
-		QueryBuilderInterface qBuilder = new QueryBuilder(index);
+		QueryBuilderInterface qBuilder;
+		WorkQueue queue = null;
 
-		// TODO WorkQueue queue = null;
-		
 		/*
 		 * This if builds the InvertedIndex if has the flag "-path"
 		 */
@@ -48,22 +43,22 @@ public class Driver {
 			} catch (Exception e) {
 				numThreads = 5;
 			}
-			WorkQueue queue = new WorkQueue(numThreads);
-			index = new ThreadSafeInvertedIndex();
-			indexBuilder = new ThreadSafeInvertedIndexBuilder((ThreadSafeInvertedIndex) index, queue);
-			qBuilder = new ThreadSafeQueryBuilder((ThreadSafeInvertedIndex) index, queue);
-			
-			/* TODO
+			queue = new WorkQueue(numThreads);
+//			index = new ThreadSafeInvertedIndex();
+//			indexBuilder = new ThreadSafeInvertedIndexBuilder((ThreadSafeInvertedIndex) index, queue);
+//			qBuilder = new ThreadSafeQueryBuilder((ThreadSafeInvertedIndex) index, queue);
+
 			ThreadSafeInvertedIndex threadSafe = new ThreadSafeInvertedIndex();
 			index = threadSafe;
 			indexBuilder = new ThreadSafeInvertedIndexBuilder(threadSafe, queue);
 			qBuilder = new ThreadSafeQueryBuilder(threadSafe, queue);
-			*/
+
+		} else {
+			index = new InvertedIndex();
+			indexBuilder = new InvertedIndexBuilder(index);
+			qBuilder = new QueryBuilder(index);
+
 		}
-		/* TODO
-		else {
-			init to single threaded versions
-		}*/
 
 		if (parse.hasFlag("-path") && parse.getPath("-path") != null) {
 			Path path = parse.getPath("-path");
@@ -104,7 +99,7 @@ public class Driver {
 			Path path = parse.getPath("-query");
 			try {
 
-				qBuilder.makeQueryFile(path, parse.hasFlag("-exact"), numThreads);
+				qBuilder.makeQueryFile(path, parse.hasFlag("-exact"));
 			} catch (IOException e) {
 				System.out.println("Unable to read the query file" + path.toString());
 
@@ -124,13 +119,11 @@ public class Driver {
 				System.out.println("Cannot write results from path: " + path.toString());
 			}
 		}
-		
-		/* TODO
-		if (queue != null) {
-			shutdown
-		}
-		*/
-		
+
+		/*
+		 * TODO if (queue != null) { shutdown }
+		 */
+
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now());
 		double seconds = (double) elapsed.toMillis() / Duration.ofSeconds(1).toMillis();

@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +31,8 @@ public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 	private final TreeMap<String, ArrayList<InvertedIndex.Result>> querySet;
 
 	/**
-	 * TODO 
+	 * Constructor
+	 *
 	 * @param index     index the query is being built from
 	 * @param workQueue the work queue
 	 */
@@ -42,10 +40,6 @@ public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 		this.index = index;
 		this.querySet = new TreeMap<>();
 		this.workQueue = workQueue;
-	}
-
-	{ // TODO Clean
-
 	}
 
 	/**
@@ -70,8 +64,11 @@ public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 	@Override
 	public List<InvertedIndex.Result> getQueryResults(String queryLine) {
 		synchronized (querySet) {
-			// TODO Check for null like you did before
-			return Collections.unmodifiableList(querySet.get(queryLine));
+			ArrayList<InvertedIndex.Result> line = this.querySet.get(queryLine);
+			if (line != null) {
+				return Collections.unmodifiableList(line);
+			}
+			return Collections.emptyList();
 		}
 
 	}
@@ -110,24 +107,11 @@ public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 	 * @throws IOException Could happen.
 	 */
 	@Override
-	public void makeQueryFile(Path path, boolean exactSearch, int numThreads) throws IOException {
-		try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);) {
-			String query;
-			while ((query = reader.readLine()) != null) {
-				workQueue.execute(new Task(query, exactSearch));
-			}
-		}
-		try {
-			workQueue.finish();
-		} catch (Exception e) {
+	public void makeQueryFile(Path path, boolean exactSearch) throws IOException {
 
-		}
-		// workQueue.shutdown();
-
-		/* TODO
 		QueryBuilderInterface.super.makeQueryFile(path, exactSearch);
 		workQueue.finish();
-		*/
+
 	}
 
 	/**
@@ -138,25 +122,7 @@ public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 	 */
 	@Override
 	public void makeQueryLine(String line, boolean exactSearch) {
-		// TODO Should just create a task and add to the work queue
-		// TODO Move this code into run()
-		TreeSet<String> queries = TextFileStemmer.uniqueStems(line);
-
-		if (queries.size() == 0) {
-			return;
-		}
-
-		String joined = String.join(" ", queries);
-		synchronized (querySet) {
-			if (querySet.containsKey(joined)) {
-				return;
-			}
-		}
-
-		ArrayList<InvertedIndex.Result> local = index.search(queries, exactSearch);
-		synchronized (querySet) {
-			this.querySet.put(joined, local);
-		}
+		workQueue.execute(new Task(line, exactSearch));
 
 	}
 
@@ -187,7 +153,23 @@ public class ThreadSafeQueryBuilder implements QueryBuilderInterface {
 
 		@Override
 		public void run() {
-			makeQueryLine(line, exact);
+			TreeSet<String> queries = TextFileStemmer.uniqueStems(line);
+
+			if (queries.size() == 0) {
+				return;
+			}
+
+			String joined = String.join(" ", queries);
+			synchronized (querySet) {
+				if (querySet.containsKey(joined)) {
+					return;
+				}
+			}
+
+			ArrayList<InvertedIndex.Result> local = index.search(queries, exact);
+			synchronized (querySet) {
+				querySet.put(joined, local);
+			}
 
 		}
 	}

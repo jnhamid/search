@@ -1,4 +1,7 @@
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
@@ -33,18 +36,14 @@ public interface QueryBuilderInterface {
 	 */
 	public void write(Path fileName) throws IOException;
 
-	// TODO Remove threads parameter
 	/**
 	 * Gets queries from the input path and performs the searches.
 	 *
 	 * @param path        The path to the Query file.
 	 * @param exactSearch True if we are doing exact search.
-	 * @param numThreads  number of threads for mulyithreading
 	 * @throws IOException
 	 */
-	public void makeQueryFile(Path path, boolean exactSearch, int numThreads) throws IOException;
-	/* TODO Try this:
-	public default void makeQueryFile(Path path, boolean exactSearch, int numThreads) throws IOException {
+	public default void makeQueryFile(Path path, boolean exactSearch) throws IOException {
 		try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);) {
 			String query;
 			while ((query = reader.readLine()) != null) {
@@ -52,7 +51,6 @@ public interface QueryBuilderInterface {
 			}
 		}
 	}
-	*/
 
 	/**
 	 * @return true is the set of queries is empty
@@ -61,7 +59,7 @@ public interface QueryBuilderInterface {
 
 	/**
 	 * will make query line
-	 * 
+	 *
 	 * @param line        the line being made
 	 * @param exactSearch whether or not exactSearch
 	 */

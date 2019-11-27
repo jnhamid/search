@@ -208,12 +208,19 @@ public class InvertedIndex {
 				}
 			}
 		}
-		
+
 		/*
 		 * TODO This below only works if there is no overlap between the two indexes.
 		 * Loop through and make sure you aren't overwriting data.
 		 */
-		this.counts.putAll(other.counts);
+		for (String word : other.counts.keySet()) {
+			if (this.counts.containsKey(word) == false) {
+				this.counts.put(word, other.counts.get(word));
+			} else {
+				this.counts.put(word, Math.max(this.counts.get(word), other.counts.get(word)));
+			}
+		}
+
 	}
 
 	/**
