@@ -33,6 +33,7 @@ public interface QueryBuilderInterface {
 	 */
 	public void write(Path fileName) throws IOException;
 
+	// TODO Remove threads parameter
 	/**
 	 * Gets queries from the input path and performs the searches.
 	 *
@@ -42,6 +43,16 @@ public interface QueryBuilderInterface {
 	 * @throws IOException
 	 */
 	public void makeQueryFile(Path path, boolean exactSearch, int numThreads) throws IOException;
+	/* TODO Try this:
+	public default void makeQueryFile(Path path, boolean exactSearch, int numThreads) throws IOException {
+		try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8);) {
+			String query;
+			while ((query = reader.readLine()) != null) {
+				makeQueryLine(query, exactSearch);
+			}
+		}
+	}
+	*/
 
 	/**
 	 * @return true is the set of queries is empty
