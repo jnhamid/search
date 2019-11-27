@@ -120,9 +120,9 @@ public class Driver {
 			}
 		}
 
-		/*
-		 * TODO if (queue != null) { shutdown }
-		 */
+		if (queue != null) {
+			queue.shutdown();
+		}
 
 		// calculate time elapsed and output
 		Duration elapsed = Duration.between(start, Instant.now());
