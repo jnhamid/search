@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -30,11 +31,12 @@ public class Driver {
 		ArgumentParser parse = new ArgumentParser(args);
 		QueryBuilderInterface qBuilder;
 		WorkQueue queue = null;
+		WebCrawler webCrawler;
 
 		/*
 		 * This if builds the InvertedIndex if has the flag "-path"
 		 */
-		if (parse.hasFlag("-threads")) {
+		if (parse.hasFlag("-threads") || parse.hasFlag("-url")) {
 			try {
 				numThreads = Integer.parseInt(parse.getString("-threads"));
 				if (numThreads == 0) {
@@ -44,14 +46,26 @@ public class Driver {
 				numThreads = 5;
 			}
 			queue = new WorkQueue(numThreads);
-//			index = new ThreadSafeInvertedIndex();
-//			indexBuilder = new ThreadSafeInvertedIndexBuilder((ThreadSafeInvertedIndex) index, queue);
-//			qBuilder = new ThreadSafeQueryBuilder((ThreadSafeInvertedIndex) index, queue);
 
 			ThreadSafeInvertedIndex threadSafe = new ThreadSafeInvertedIndex();
 			index = threadSafe;
 			indexBuilder = new ThreadSafeInvertedIndexBuilder(threadSafe, queue);
 			qBuilder = new ThreadSafeQueryBuilder(threadSafe, queue);
+
+			if (parse.hasFlag("-limit")) {
+				webCrawler = new WebCrawler(threadSafe, queue, Integer.parseInt(parse.getString("-limit")));
+			} else {
+				webCrawler = new WebCrawler(threadSafe, queue, 50);
+			}
+
+			if (parse.hasFlag("-url")) {
+				try {
+					URL seedURL = new URL(parse.getString("-url"));
+					webCrawler.traverse(seedURL);
+				} catch (Exception e) {
+					System.out.println("Something went wrong while creating a URL from: " + parse.getString("-url"));
+				}
+			}
 
 		} else {
 			index = new InvertedIndex();
