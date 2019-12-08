@@ -5,6 +5,13 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
 
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+
 /**
  * Class responsible for running this project based on the provided command-line
  * arguments. See the README for details.
@@ -32,11 +39,12 @@ public class Driver {
 		QueryBuilderInterface qBuilder;
 		WorkQueue queue = null;
 		WebCrawler webCrawler;
+		SearchServlet servlet;
 
 		/*
 		 * This if builds the InvertedIndex if has the flag "-path"
 		 */
-		if (parse.hasFlag("-threads") || parse.hasFlag("-url")) {
+		if (parse.hasFlag("-threads") || parse.hasFlag("-url") || parse.hasFlag("-port")) {
 			try {
 				numThreads = Integer.parseInt(parse.getString("-threads"));
 				if (numThreads == 0) {
@@ -65,6 +73,44 @@ public class Driver {
 				} catch (Exception e) {
 					System.out.println("Something went wrong while creating a URL from: " + parse.getString("-url"));
 				}
+			}
+			if (parse.hasFlag("-port")) {
+				servlet = new SearchServlet(qBuilder, threadSafe, webCrawler);
+
+				int port;
+
+				try {
+					port = Integer.parseInt(parse.getString("-port"));
+				} catch (Exception e) {
+					port = 8080;
+				}
+
+				try {
+					ServletContextHandler servletContextHandler = null;
+
+					servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+					servletContextHandler.setContextPath("/");
+
+					DefaultHandler defaultHandler = new DefaultHandler();
+					defaultHandler.setServeIcon(true);
+
+					ContextHandler contextHandler = new ContextHandler("/favicon.ico");
+					contextHandler.setHandler(defaultHandler);
+
+					ServletHolder servletHolder = new ServletHolder(servlet);
+
+					ServletHandler servletHandler = new ServletHandler();
+					servletHandler.addServletWithMapping(servletHolder, "/");
+
+					Server server = new Server(port);
+					server.setHandler(servletHandler);
+					server.start();
+					server.join();
+
+				} catch (Exception e) {
+					System.err.println("Jetty server Did not work");
+				}
+
 			}
 
 		} else {
