@@ -227,7 +227,8 @@ public class SearchServlet extends HttpServlet {
 
 		SnowballStemmer stemmer = new SnowballStemmer(DEFAULT);
 		ArrayList<String> queryList = new ArrayList<String>();
-		for (String part : message.split(" ")) {
+		for (String part : TextParser.parse(message)) {
+//		for (String part : message.split(" ")) { // TODO Modified by Sophie
 			if (part == " ") {
 				part = "";
 			}
