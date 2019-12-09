@@ -57,7 +57,7 @@ public class SearchServlet extends HttpServlet {
 	 * initializes the LinkedQueue for the output messages.
 	 *
 	 * @param queryBuilder The query builder
-	 * @param index
+	 * @param index        an index
 	 *
 	 */
 	public SearchServlet(QueryBuilderInterface queryBuilder, ThreadSafeInvertedIndex index) {
@@ -69,7 +69,7 @@ public class SearchServlet extends HttpServlet {
 	 * Constructor of the search servlet.
 	 *
 	 * @param queryBuilder builds the query
-	 * @param threadSafe   an index that is threadsafe
+	 * @param threadSafe   an index
 	 * @param webCrawler   crawl the web
 	 */
 	public SearchServlet(QueryBuilderInterface queryBuilder, ThreadSafeInvertedIndex threadSafe,
@@ -138,7 +138,7 @@ public class SearchServlet extends HttpServlet {
 		out.printf("				</div>%n");
 		out.printf("%n");
 		out.printf("%n");
-		out.printf("<input type = \"checkbox\" name = \"partial\" id = \"partial\" > Partial Search");
+		out.printf("<input type = \"checkbox\" name = \"exact\" id = \"exact\" > Exact Search");
 		out.printf("%n");
 		out.printf("				<div class=\"control\">%n");
 		out.printf("			    <button class=\"button is-link\" type=\"submit\">%n");
@@ -218,9 +218,9 @@ public class SearchServlet extends HttpServlet {
 
 		boolean exact;
 		if (checkBox != null && checkBox.contains("on")) {
-			exact = false;
-		} else {
 			exact = true;
+		} else {
+			exact = false;
 		}
 
 		String formatString = null;
